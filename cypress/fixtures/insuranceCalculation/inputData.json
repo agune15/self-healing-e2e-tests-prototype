@@ -1,0 +1,33 @@
+{
+  "employmentType": "Angestellt",
+  "income": "70000",
+  "insuranceType": "Vollversicherung",
+  "ingressDate": "2: 2024-10-01",
+  "birthDates": {
+    "invalidDate": {
+      "day": "32",
+      "month": "12",
+      "year": "2000"
+    },
+    "futureDate": {
+      "day": "01",
+      "month": "01",
+      "year": "2025"
+    },
+    "olderThan101": {
+      "day": "01",
+      "month": "01",
+      "year": "1919"
+    },
+    "youngerThan16": {
+      "day": "01",
+      "month": "01",
+      "year": "2020"
+    },
+    "validDate": {
+      "day": "01",
+      "month": "01",
+      "year": "1990"
+    }
+  }
+}
