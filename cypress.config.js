@@ -1,22 +1,22 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress';
 
 export default defineConfig({
   env: {
-    baseURL: "https://www.ottonova.de",
+    baseURL: 'https://www.ottonova.de',
   },
 
   e2e: {
     chromeWebSecurity: false,
     experimentalInteractiveRunEvents: true,
     defaultCommandTimeout: 20000,
-    downloadsFolder: "./cypress/downloads",
+    downloadsFolder: './cypress/downloads',
     requestTimeout: 20000,
     responseTimeout: 60000,
-    screenshotsFolder: "./reports/screenshots",
+    screenshotsFolder: './reports/screenshots',
     video: false,
     viewportWidth: 1600,
     viewportHeight: 1400,
-    reporter: "cypress-mochawesome-reporter",
+    reporter: 'cypress-mochawesome-reporter',
     reporterOptions: {
       charts: true,
       embeddedScreenshots: true,
@@ -25,20 +25,16 @@ export default defineConfig({
       saveAllAttempts: false,
       saveHtml: false,
       saveJson: true,
-      reportDir: "reports/mocha-reports",
-      reportFilename: "result-[name]",
-      reportPageTitle: "Test Report",
+      reportDir: 'reports/mocha-reports',
+      reportFilename: 'result-[name]',
+      reportPageTitle: 'Test Report',
     },
 
     setupNodeEvents(on) {
-      on("task", {
+      on('task', {
         saveHtmlSnapshot({ testName, html }) {
-          const saveName = testName.replace(/\s/g, "");
-          const filePath = path.join(
-            process.cwd(),
-            "../reports/snapshots",
-            `${saveName}.html`
-          );
+          const saveName = testName.replace(/\s/g, '');
+          const filePath = path.join(process.cwd(), '../reports/snapshots', `${saveName}.html`);
 
           fs.mkdirSync(path.dirname(filePath), { recursive: true });
           fs.writeFileSync(filePath, html);
