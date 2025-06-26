@@ -1,12 +1,51 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
-  e2e: {
-    setupNodeEvents() {
-      // implement node event listeners here
-    },
-  },
   env: {
     baseURL: "https://www.ottonova.de",
+  },
+
+  e2e: {
+    chromeWebSecurity: false,
+    experimentalInteractiveRunEvents: true,
+    defaultCommandTimeout: 20000,
+    downloadsFolder: "./cypress/downloads",
+    requestTimeout: 20000,
+    responseTimeout: 60000,
+    screenshotsFolder: "./reports/screenshots",
+    video: false,
+    viewportWidth: 1600,
+    viewportHeight: 1400,
+    reporter: "cypress-mochawesome-reporter",
+    reporterOptions: {
+      charts: true,
+      embeddedScreenshots: true,
+      inlineAssets: true,
+      quiet: true,
+      saveAllAttempts: false,
+      saveHtml: false,
+      saveJson: true,
+      reportDir: "reports/mocha-reports",
+      reportFilename: "result-[name]",
+      reportPageTitle: "Test Report",
+    },
+
+    setupNodeEvents(on) {
+      on("task", {
+        saveHtmlSnapshot({ testName, html }) {
+          const saveName = testName.replace(/\s/g, "");
+          const filePath = path.join(
+            process.cwd(),
+            "../reports/snapshots",
+            `${saveName}.html`
+          );
+
+          fs.mkdirSync(path.dirname(filePath), { recursive: true });
+          fs.writeFileSync(filePath, html);
+
+          return Promise.resolve(null);
+        },
+      });
+    },
   },
 });

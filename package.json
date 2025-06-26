@@ -1,13 +1,14 @@
 {
-  "name": "ottonova_qacodingchallenge",
+  "name": "self-healing-e2e-tests-prototype",
   "version": "1.0.0",
-  "description": "",
+  "description": "TBD",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cy:open": "cypress open --e2e",
+    "cy:run": "cypress run --browser chrome --spec 'cypress/e2e/*'"
   },
   "keywords": [],
-  "author": "",
+  "author": "Alex Nebot Oller",
   "license": "MIT",
   "devDependencies": {
     "cypress": "^14.4",
