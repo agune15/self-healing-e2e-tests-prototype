@@ -1,11 +1,10 @@
 import { defineConfig } from 'cypress';
 
 export default defineConfig({
-  env: {
-    baseURL: 'https://www.ottonova.de',
-  },
+  env: {},
 
   e2e: {
+    baseUrl: 'https://www.ottonova.de',
     chromeWebSecurity: false,
     experimentalInteractiveRunEvents: true,
     defaultCommandTimeout: 20000,
@@ -34,7 +33,7 @@ export default defineConfig({
       on('task', {
         saveHtmlSnapshot({ testName, html }) {
           const saveName = testName.replace(/\s/g, '');
-          const filePath = path.join(process.cwd(), '../reports/snapshots', `${saveName}.html`);
+          const filePath = path.join(process.cwd(), './reports/snapshots', `${saveName}.html`);
 
           fs.mkdirSync(path.dirname(filePath), { recursive: true });
           fs.writeFileSync(filePath, html);
