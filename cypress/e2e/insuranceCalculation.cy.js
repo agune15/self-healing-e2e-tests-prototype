@@ -55,5 +55,6 @@ describe('Online Beitragsrechner', () => {
       SELECTORS.insuranceStatusStatutory,
       this.inputData.currentInsuranceType
     );
+    personalSituation.insureChild(this.inputData.isParent, this.inputData.childDate);
   });
 });

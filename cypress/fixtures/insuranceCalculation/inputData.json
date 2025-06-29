@@ -4,6 +4,7 @@
   "income": "100000",
   "insuranceType": "Vollversicherung",
   "ingressDate": "2: 2024-10-01",
+  "isParent": true,
   "birthDates": {
     "invalidDate": {
       "day": "32",
@@ -29,6 +30,11 @@
       "day": "01",
       "month": "01",
       "year": "1990"
+    },
+    "childDate": {
+      "day": "01",
+      "month": "01",
+      "year": "2020"
     }
   }
 }
