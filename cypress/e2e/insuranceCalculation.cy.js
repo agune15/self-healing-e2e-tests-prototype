@@ -1,67 +1,59 @@
-import SELECTORS from '../support/selectors';
+import SELECTORS from '../support/constants/selectors';
+import * as page from '../support/page';
+import * as insuranceChoice from '../support/insuranceChoice';
+import * as personalSituation from '../support/personalSituation';
 
 describe('Online Beitragsrechner', () => {
   before(() => {
-    // Load fixtures
     cy.fixture('insuranceCalculation/inputData.json').as('inputData');
     cy.fixture('insuranceCalculation/birthDateErrors.json').as('birthDateErrors');
   });
 
   it('should complete the insurance calculation process', function () {
-    // Step 1: Visit the Ottonova Beitragsrechner page
     cy.visit('/online-beitragsrechner');
-
-    // Step 2: Accept the cookie banner if it appears
-    cy.get('body').then($body => {
-      if ($body.find(SELECTORS.acceptAllButton).length > 0) {
-        cy.get(SELECTORS.acceptAllButton).click();
-      }
-    });
-
-    // Step 3: Select employment type and enter income
-    cy.clickRadioButtonWithText(SELECTORS.employmentStatusOptionEmployed, this.inputData.employmentType);
-    cy.typeInput(SELECTORS.incomeInput, this.inputData.income);
-    cy.clickButton(SELECTORS.employmentContinueButton);
-
-    // Step 4: Select insurance type and start date
-    cy.clickRadioButtonWithText(SELECTORS.fullInsurance, this.inputData.insuranceType);
-    cy.selectDropdownOption(SELECTORS.ingressDateSelect, this.inputData.ingressDate);
-    cy.clickButton(SELECTORS.insuranceContinueButton);
-
-    // Step 5: Assert birthdate input field error messages
-
-    // Invalid date
-    cy.typeInput(SELECTORS.dayInput, this.inputData.birthDates.invalidDate.day);
-    cy.typeInput(SELECTORS.monthInput, this.inputData.birthDates.invalidDate.month);
-    cy.typeInput(SELECTORS.yearInput, this.inputData.birthDates.invalidDate.year);
-    cy.assertTextIsVisible(SELECTORS.invalidAgeValidationMessage, this.birthDateErrors.invalidDate);
-    cy.assertButtonIsDisabled(SELECTORS.birthdayContinueButton);
-
-    // Future date
-    cy.typeInput(SELECTORS.dayInput, this.inputData.birthDates.futureDate.day);
-    cy.typeInput(SELECTORS.monthInput, this.inputData.birthDates.futureDate.month);
-    cy.typeInput(SELECTORS.yearInput, this.inputData.birthDates.futureDate.year);
-    cy.assertTextIsVisible(SELECTORS.negativeAgeValidationMessage, this.birthDateErrors.futureDate);
-    cy.assertButtonIsDisabled(SELECTORS.birthdayContinueButton);
-
-    // Person older than 101 y.o.
-    cy.typeInput(SELECTORS.dayInput, this.inputData.birthDates.olderThan101.day);
-    cy.typeInput(SELECTORS.monthInput, this.inputData.birthDates.olderThan101.month);
-    cy.typeInput(SELECTORS.yearInput, this.inputData.birthDates.olderThan101.year);
-    cy.assertTextIsVisible(SELECTORS.invalidAgeValidationMessage, this.birthDateErrors.olderThan101);
-    cy.assertButtonIsDisabled(SELECTORS.birthdayContinueButton);
-
-    // Person younger than 16 y.o.
-    cy.typeInput(SELECTORS.dayInput, this.inputData.birthDates.youngerThan16.day);
-    cy.typeInput(SELECTORS.monthInput, this.inputData.birthDates.youngerThan16.month);
-    cy.typeInput(SELECTORS.yearInput, this.inputData.birthDates.youngerThan16.year);
-    cy.assertTextIsVisible(SELECTORS.invalidAgeValidationMessage, this.birthDateErrors.youngerThan16);
-    cy.assertButtonIsDisabled(SELECTORS.birthdayContinueButton);
-
-    // Step 6: Enter a valid birthdate and proceed to the next page
-    cy.typeInput(SELECTORS.dayInput, this.inputData.birthDates.validDate.day);
-    cy.typeInput(SELECTORS.monthInput, this.inputData.birthDates.validDate.month);
-    cy.typeInput(SELECTORS.yearInput, this.inputData.birthDates.validDate.year);
-    cy.clickButton(SELECTORS.birthdayContinueButton);
+    page.acceptCookies();
+    insuranceChoice.selectOccupationalStatusAndInputIncome(
+      SELECTORS.employmentStatusOptionEmployed,
+      this.inputData.employmentType,
+      this.inputData.income
+    );
+    insuranceChoice.selectInsuranceTypeAndStartDate(
+      SELECTORS.fullInsurance,
+      this.inputData.insuranceType,
+      this.inputData.ingressDate
+    );
+    personalSituation.inputInvalidBirthDateAndAssertError(
+      this.inputData.birthDates.invalidDate.day,
+      this.inputData.birthDates.invalidDate.month,
+      this.inputData.birthDates.invalidDate.year,
+      this.birthDateErrors.invalidDate
+    );
+    personalSituation.inputInvalidBirthDateAndAssertError(
+      this.inputData.birthDates.futureDate.day,
+      this.inputData.birthDates.futureDate.month,
+      this.inputData.birthDates.futureDate.year,
+      this.birthDateErrors.futureDate
+    );
+    personalSituation.inputInvalidBirthDateAndAssertError(
+      this.inputData.birthDates.olderThan101.day,
+      this.inputData.birthDates.olderThan101.month,
+      this.inputData.birthDates.olderThan101.year,
+      this.birthDateErrors.olderThan101
+    );
+    personalSituation.inputInvalidBirthDateAndAssertError(
+      this.inputData.birthDates.youngerThan16.day,
+      this.inputData.birthDates.youngerThan16.month,
+      this.inputData.birthDates.youngerThan16.year,
+      this.birthDateErrors.youngerThan16
+    );
+    personalSituation.inputBirthDate(
+      this.inputData.birthDates.validDate.day,
+      this.inputData.birthDates.validDate.month,
+      this.inputData.birthDates.validDate.year
+    );
+    personalSituation.selectCurrentInsuranceType(
+      SELECTORS.insuranceStatusStatutory,
+      this.inputData.currentInsuranceType
+    );
   });
 });
