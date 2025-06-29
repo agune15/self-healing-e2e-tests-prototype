@@ -32,3 +32,7 @@ Cypress.Commands.add('selectDropdownOption', (selector, value) => {
 Cypress.Commands.add('typeInput', (selector, value, options) => {
   cy.get(`input[data-cy="${selector}"]`).should('be.visible').clear().type(value, options);
 });
+
+Cypress.Commands.add('urlIncludes', url => {
+  cy.url().should('include', url);
+});

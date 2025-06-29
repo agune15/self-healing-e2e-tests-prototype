@@ -1,11 +1,11 @@
 import SELECTORS from './constants/selectors';
+import { inputDate } from './helpers';
 
 export function insureChild(isParent = false, childBirthDate = {}) {
+  cy.assertTextIsVisible('Hast du Kinder, die du mitversichern willst?');
   if (isParent) {
     cy.clickRadioButtonWithText(SELECTORS.insureChildrenButton, 'ein Kind mit versichern');
-    cy.typeInput(SELECTORS.dayInput, childBirthDate.day);
-    cy.typeInput(SELECTORS.monthInput, childBirthDate.month);
-    cy.typeInput(SELECTORS.yearInput, childBirthDate.year);
+    inputDate(childBirthDate);
     cy.clickButton(SELECTORS.buttons.childrenWithKidsContinueButton);
   } else {
     cy.clickRadioButtonWithText(SELECTORS.noChildrenButton, 'kein Kind versichern');
@@ -13,22 +13,21 @@ export function insureChild(isParent = false, childBirthDate = {}) {
   }
 }
 
-export function inputBirthDate(day, month, year) {
-  cy.typeInput(SELECTORS.dayInput, day);
-  cy.typeInput(SELECTORS.monthInput, month);
-  cy.typeInput(SELECTORS.yearInput, year);
+export function inputBirthDate(date) {
+  cy.assertTextIsVisible('Wann bist du geboren?');
+  inputDate(date);
   cy.clickButton(SELECTORS.birthdayContinueButton);
 }
 
-export function inputInvalidBirthDateAndAssertError(day, month, year, errorMessage) {
-  cy.typeInput(SELECTORS.dayInput, day);
-  cy.typeInput(SELECTORS.monthInput, month);
-  cy.typeInput(SELECTORS.yearInput, year);
+export function inputInvalidBirthDate(date, errorMessage) {
+  cy.assertTextIsVisible('Wann bist du geboren?');
+  inputDate(date);
   cy.assertTextIsVisible(SELECTORS.invalidAgeValidationMessage, errorMessage);
   cy.assertButtonIsDisabled(SELECTORS.buttons.birthdayContinueButton);
 }
 
 export function selectCurrentInsuranceType(typeSelector, currentInsuranceType) {
+  cy.assertTextIsVisible('Wie bist du aktuell versichert?');
   cy.clickRadioButtonWithText(typeSelector, currentInsuranceType);
   cy.clickButton(SELECTORS.buttons.insuranceContinueButton);
 }

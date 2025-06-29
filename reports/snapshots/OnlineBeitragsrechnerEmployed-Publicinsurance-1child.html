@@ -1,0 +1,122 @@
+<body>
+    <div class="font_preload" style="opacity: 0">
+      <span style="font-family: Figtree, Avenir, Arial, sans-serif"></span>
+    </div>
+    <script type="text/javascript">
+      var isIE = false || !!document.documentMode;
+
+      var agent = window.navigator.userAgent;
+      var isIOS = /iPad|iPhone/.test(agent) && !window.MSStream;
+      var iOSVersion = 0;
+
+      if (isIOS) {
+        var start = agent.indexOf('OS');
+        iOSVersion = window.Number(agent.substr(start + 3, 3).replace('_', '.'));
+      }
+
+      // Not fully reliable, but working way to check the browser compatible with ES2015
+      var isEs2015Supported = 'Promise' in window;
+
+      if (isIE || (isIOS && iOSVersion <= 9) || !isEs2015Supported) {
+        var supportedBrowsers = document.createElement('div');
+        var title = 'Du nutzt einen älteren Browser, der nicht unterstützt wird.';
+        var description =
+          'Für eine fehlerfreie Darstellung und mehr Sicherheit empfehlen wir dir ' +
+          'auf einen modernen Browser umzusteigen.';
+
+        if (isIOS) {
+          title = 'Du nutzt ein älteres Betriebssystem, welches leider nicht unterstützt wird.';
+          description =
+            'Für eine fehlerfreie Darstellung und mehr Sicherheit empfehlen wir dir ' +
+            'dein Betriebssystem upzudaten und auf einen modernen Browser umzusteigen.';
+        }
+
+        supportedBrowsers.innerHTML =
+          '<div id="ieWindow" style=" width: 100% !important">' +
+          '<div>' +
+          '<span class="h4">' +
+          title +
+          '</span>' +
+          '<p>' +
+          description +
+          '</p>' +
+          '<span class="h5">Unsere Empfehlungen</span>' +
+          '<ul>' +
+          '<li>' +
+          '<a href="https://www.google.de/chrome/" target="_blank">' +
+          '<div class="browsericon chrome"></div>' +
+          '<span>Chrome</span>' +
+          '</a>' +
+          '</li>' +
+          '<li>' +
+          '<a href="https://www.mozilla.org/de/firefox/new/" target="_blank">' +
+          '<div class="browsericon firefox"></div>' +
+          '<span>Firefox</span>' +
+          '</a>' +
+          '</li>' +
+          '<li>' +
+          '<a href="https://www.opera.com/" target="_blank">' +
+          '<div class="browsericon opera"></div>' +
+          '<span>Opera</span>' +
+          '</a>' +
+          '</li>' +
+          '<li>' +
+          '<a href="https://www.apple.com/de/safari/" target="_blank">' +
+          '<div class="browsericon safari"></div>' +
+          '<span>Safari</span>' +
+          '</a>' +
+          '</li>' +
+          '</ul>' +
+          '</div>' +
+          '</div>';
+
+        var styleElem = document.createElement('style');
+
+        supportedBrowsers.setAttribute('id', 'supportedBrowsers');
+        var link = document.createElement('link');
+        link.setAttribute('rel', 'stylesheet');
+        link.setAttribute('type', 'text/css');
+
+        var styleFile = '/2019/css/style.min.css';
+        // IE Version === 9
+        if (document.documentMode === 9) {
+          styleFile = '/2019/css/hometop.min.css';
+        }
+
+        link.setAttribute('href', window['otto-config'].websiteUri + styleFile);
+        var body = document.body || document.getElementsByTagName('body')[0];
+
+        // IE Version > 8
+        if (document.documentMode > 8) {
+          styleElem.innerHTML =
+            'body>#supportedBrowsers{display:table-cell!important;display:-ms-flexbox;display:-webkit-flex;display:flex;vertical-align:middle;align-items:center;justify-content:center;-ms-flex-pack:center;min-height:220px;height:100px}body>#supportedBrowsers>div#ieWindow{display:inline-block!important;width:100%;max-width:100%}';
+          document.head.appendChild(link);
+          document.body.appendChild(styleElem);
+        } else if (isIOS) {
+          styleElem.innerHTML =
+            'body>#supportedBrowsers{display:inline-block!important;width:100%;text-align:center;vertical-align:middle;align-items:center;justify-content:center;-ms-flex-pack:center;min-height:220px;height:100px;color:#0077ff;}body>#supportedBrowsers>div#ieWindow{display:inline-block!important;width:100%;max-width:100%}body>#supportedBrowsers>div#ieWindow>div>ul{list-style-type:none;display:block}body>#supportedBrowsers>div#ieWindow>div>ul>li{list-style-type:none;display:inline-block;width:160px;padding:20px}body>#supportedBrowsers>#ieWindow>div>ul>li>a>.browsericon.chrome{background:url(https://www.ottonova.de/2019/img/brand/chrome.gif) no-repeat scroll center 0 transparent;height:150px}body>#supportedBrowsers>#ieWindow>div>ul>li>a>.browsericon.firefox{background:url(https://www.ottonova.de/2019/img/brand/firefox.gif) no-repeat scroll center 0 transparent;height:150px}body>#supportedBrowsers>#ieWindow>div>ul>li>a>.browsericon.safari{background:url(https://www.ottonova.de/2019/img/brand/safari.gif) no-repeat scroll center 0 transparent;height:150px}body>#supportedBrowsers>#ieWindow>div>ul>li>a>.browsericon.opera{background:url(https://www.ottonova.de/2019/img/brand/opera.gif) no-repeat scroll center 0 transparent;height:150px}body>#supportedBrowsers>#ieWindow>div>ul>li>a>span{color:#0077ff;}body>div#supportedBrowsers>div#ieWindow>div>span{color:#00104b}body>div#supportedBrowsers>div#ieWindow>div>p{color:#667093}';
+          document.head.appendChild(link);
+          document.body.appendChild(styleElem);
+        } else {
+          document.getElementsByTagName('head')[0].appendChild(link);
+          document.getElementsByTagName('head')[0].appendChild(styleElem);
+        }
+
+        setTimeout(function () {
+          var cssGridContainer = document.body.querySelector('.css-grid-container');
+          if (cssGridContainer) {
+            document.body.removeChild(cssGridContainer);
+          }
+          document.body.appendChild(supportedBrowsers);
+        }, 1000);
+      }
+    </script>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PZKJ2FJ" title="google-tag-manager" height="0" width="0" style="display: none; visibility: hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <da-root _nghost-ng-c728632794="" class="ng-tns-c728632794-0 da-root" ng-version="17.3.12"><da-header _ngcontent-ng-c728632794="" class="ng-tns-c728632794-0" _nghost-ng-c927112773=""><div _ngcontent-ng-c927112773="" class="header hidden-on-desktop"><button _ngcontent-ng-c927112773="" class="logo"><frontend-image _ngcontent-ng-c927112773="" alt="ottonova logo" file="logo-on.svg" width="24px" height="26px" data-cy="ottonova-logo-mobile" _nghost-ng-c3736863504=""><img _ngcontent-ng-c3736863504="" src="assets/images/logo-on.svg" alt="ottonova logo" class="image-logo-on image-logo-on-dims ng-star-inserted" style="width: 24px; height: 26px;"><!----><!----><!----><!----></frontend-image></button><div _ngcontent-ng-c927112773="" class="header-content"><!----><div _ngcontent-ng-c927112773="" class="dropdowns-wrapper"><da-contacts-dropdown _ngcontent-ng-c927112773="" _nghost-ng-c2198232848="" class="ng-tns-c2198232848-3"><div _ngcontent-ng-c2198232848="" class="hidden-on-desktop ng-tns-c2198232848-3"><div _ngcontent-ng-c2198232848="" class="contacts-dropdown ng-tns-c2198232848-3"><div _ngcontent-ng-c2198232848="" class="phone-icon ng-tns-c2198232848-3"><div _ngcontent-ng-c2198232848="" class="phone-icon-wrapper ng-tns-c2198232848-3"><frontend-image _ngcontent-ng-c2198232848="" type="svg" alt="Phone" file="contact.svg" class="phone ng-tns-c2198232848-3" _nghost-ng-c3736863504=""><svg _ngcontent-ng-c3736863504="" class="svg stretchToContainer image-contact image-contact-dims ng-star-inserted" tabindex="-1"><title _ngcontent-ng-c3736863504="">Phone</title><use _ngcontent-ng-c3736863504="" href="assets/images/contact.svg#svg-contact"></use></svg><!----><!----><!----><!----></frontend-image></div></div><da-modal _ngcontent-ng-c2198232848="" animationtype="mobileContactDropdown" class="ng-tns-c2198232848-3 ng-tns-c3986635204-6" _nghost-ng-c3986635204=""><!----></da-modal></div></div><!----></da-contacts-dropdown><da-restart-dropdown _ngcontent-ng-c927112773="" _nghost-ng-c3392372944=""><div _ngcontent-ng-c3392372944=""><button _ngcontent-ng-c3392372944="" class="restart-dropdown-button-wrapper"><frontend-image _ngcontent-ng-c3392372944="" type="svg" alt="Reload" file="reload-arrow.svg" data-cy="restart-digital-assistant" class="restart-dropdown-button" _nghost-ng-c3736863504=""><svg _ngcontent-ng-c3736863504="" class="svg stretchToContainer image-reload-arrow image-reload-arrow-dims ng-star-inserted" tabindex="-1"><title _ngcontent-ng-c3736863504="">Reload</title><use _ngcontent-ng-c3736863504="" href="assets/images/reload-arrow.svg#svg-reload-arrow"></use></svg><!----><!----><!----><!----></frontend-image></button><da-modal _ngcontent-ng-c3392372944="" _nghost-ng-c3986635204="" class="ng-tns-c3986635204-7"><!----></da-modal></div></da-restart-dropdown></div></div><div _ngcontent-ng-c927112773="" class="progress"><div _ngcontent-ng-c927112773="" class="progress-bar" style="width: 0%;"></div></div><da-modal _ngcontent-ng-c927112773="" _nghost-ng-c3986635204="" class="ng-tns-c3986635204-4"><!----></da-modal></div><div _ngcontent-ng-c927112773="" class="header hidden-on-mobile"><button _ngcontent-ng-c927112773=""><frontend-image _ngcontent-ng-c927112773="" alt="ottonova Logo" file="trademark.svg" width="150px" data-cy="ottonova-logo" _nghost-ng-c3736863504=""><img _ngcontent-ng-c3736863504="" src="assets/images/trademark.svg" alt="ottonova Logo" class="image-trademark image-trademark-dims ng-star-inserted" style="width: 150px; height: auto;"><!----><!----><!----><!----></frontend-image></button><da-contacts-menu _ngcontent-ng-c927112773="" class="contacts-menu" _nghost-ng-c791523290=""><div _ngcontent-ng-c791523290="" class="hidden-on-mobile"><div _ngcontent-ng-c791523290=""><!----><frontend-link _ngcontent-ng-c791523290="" _nghost-ng-c712525484=""><a _ngcontent-ng-c712525484="" class="otto-link link-button" tabindex="0" href="tel:+498912140712"><!----><div _ngcontent-ng-c791523290="" class="telephone-link phone-ringing"><span _ngcontent-ng-c791523290="" class="phone-icon sm"><span _ngcontent-ng-c791523290="" class="ring"><span _ngcontent-ng-c791523290="" class="soundwave"></span><span _ngcontent-ng-c791523290="" class="soundwave"></span><span _ngcontent-ng-c791523290="" class="soundwave"></span></span><svg _ngcontent-ng-c791523290="" fill="currentColor" viewBox="0 0 16 16"><path _ngcontent-ng-c791523290="" d="M7.783 14.525c-1.38-.923-2.538-2.092-3.521-3.444-1.095-1.505-1.935-3.143-2.405-4.968-.299-1.16-.433-2.335-.314-3.537.058-.588.318-1.06.775-1.392a6.374 6.374 0 011.17-.69c.454-.2.94-.325 1.416-.47.232-.07.387.011.493.232.557 1.158 1.113 2.317 1.667 3.477.156.326.058.64-.252.829-.374.227-.75.45-1.126.675-.388.233-.518.567-.366.999.077.22.145 1.321 1.216 2.834 1.07 1.512 2.103 1.95 2.274 2.085.326.258.69.234 1-.049.324-.296.648-.595.973-.891.3-.274.604-.267.895.024.882.879 1.763 1.759 2.644 2.64.215.214.23.355.073.621-.385.65-.817 1.263-1.38 1.764-.21.187-.442.354-.683.497-.412.243-.774.29-1.346.19-1.096-.225-2.184-.744-3.203-1.426z"></path></svg></span> +49 89 121 407 12 </div><!----></a></frontend-link></div></div><!----></da-contacts-menu><da-restart-dropdown _ngcontent-ng-c927112773="" _nghost-ng-c3392372944=""><div _ngcontent-ng-c3392372944=""><button _ngcontent-ng-c3392372944="" class="restart-dropdown-button-wrapper"><frontend-image _ngcontent-ng-c3392372944="" type="svg" alt="Reload" file="reload-arrow.svg" data-cy="restart-digital-assistant" class="restart-dropdown-button" _nghost-ng-c3736863504=""><svg _ngcontent-ng-c3736863504="" class="svg stretchToContainer image-reload-arrow image-reload-arrow-dims ng-star-inserted" tabindex="-1"><title _ngcontent-ng-c3736863504="">Reload</title><use _ngcontent-ng-c3736863504="" href="assets/images/reload-arrow.svg#svg-reload-arrow"></use></svg><!----><!----><!----><!----></frontend-image></button><da-modal _ngcontent-ng-c3392372944="" _nghost-ng-c3986635204="" class="ng-tns-c3986635204-8"><!----></da-modal></div></da-restart-dropdown></div><da-logo-dropdown _ngcontent-ng-c927112773="" _nghost-ng-c2377650108=""><!----></da-logo-dropdown></da-header><div _ngcontent-ng-c728632794="" class="navigation-wrapper ng-tns-c728632794-0"><div _ngcontent-ng-c728632794="" class="navigation ng-tns-c728632794-0"><da-navigation _ngcontent-ng-c728632794="" class="ng-tns-c728632794-0 ng-tns-c2999626113-1" _nghost-ng-c2999626113=""><section _ngcontent-ng-c2999626113="" class="navigation ng-tns-c2999626113-1 navigation-top"><div _ngcontent-ng-c2999626113="" class="navigation-header ng-tns-c2999626113-1"><h6 _ngcontent-ng-c2999626113="" class="navigation-header-title ng-tns-c2999626113-1">Fortschritt</h6><button _ngcontent-ng-c2999626113="" type="button" class="navigation-header-button ng-tns-c2999626113-1 ng-star-inserted" aria-label="Menü schließen" aria-expanded="true"><frontend-image _ngcontent-ng-c2999626113="" type="svg" file="arrow-down-sm.svg" class="navigation-header-icon ng-tns-c2999626113-1" _nghost-ng-c3736863504=""><svg _ngcontent-ng-c3736863504="" class="svg stretchToContainer image-arrow-down-sm image-arrow-down-sm-dims ng-star-inserted" tabindex="-1"><title _ngcontent-ng-c3736863504=""></title><use _ngcontent-ng-c3736863504="" href="assets/images/arrow-down-sm.svg#svg-arrow-down-sm"></use></svg><!----><!----><!----><!----></frontend-image></button><!----></div><div _ngcontent-ng-c2999626113="" class="ng-tns-c2999626113-1 ng-trigger ng-trigger-expandCollapse" style="opacity: 1; margin-top: 23px; visibility: visible;"><ul _ngcontent-ng-c2999626113="" class="routes-list ng-tns-c2999626113-1 ng-star-inserted" style=""><li _ngcontent-ng-c2999626113="" class="route ng-tns-c2999626113-1 route-incomplete"><span _ngcontent-ng-c2999626113="" class="route-step ng-tns-c2999626113-1 ng-star-inserted"><span _ngcontent-ng-c2999626113="" class="route-step-name disabled ng-tns-c2999626113-1">Versicherungswahl</span></span><!----><!----></li><!----></ul><ul _ngcontent-ng-c2999626113="" class="routes-list ng-tns-c2999626113-1 ng-star-inserted" style=""><li _ngcontent-ng-c2999626113="" class="route ng-tns-c2999626113-1 route-incomplete"><span _ngcontent-ng-c2999626113="" class="route-step ng-tns-c2999626113-1 ng-star-inserted"><span _ngcontent-ng-c2999626113="" class="route-step-name disabled ng-tns-c2999626113-1">Persönliche Situation</span></span><!----><!----></li><!----></ul><ul _ngcontent-ng-c2999626113="" class="routes-list ng-tns-c2999626113-1 ng-star-inserted" style=""><li _ngcontent-ng-c2999626113="" class="route ng-tns-c2999626113-1 route-incomplete"><span _ngcontent-ng-c2999626113="" class="route-step ng-tns-c2999626113-1 ng-star-inserted"><span _ngcontent-ng-c2999626113="" class="route-step-name disabled ng-tns-c2999626113-1">Tarifoptionen</span></span><!----><!----></li><!----></ul><ul _ngcontent-ng-c2999626113="" class="routes-list ng-tns-c2999626113-1 ng-star-inserted" style=""><li _ngcontent-ng-c2999626113="" class="route ng-tns-c2999626113-1 route-incomplete"><span _ngcontent-ng-c2999626113="" class="route-step ng-tns-c2999626113-1 ng-star-inserted"><span _ngcontent-ng-c2999626113="" class="route-step-name disabled ng-tns-c2999626113-1">Dein Angebot</span></span><!----><!----></li><!----></ul><!----><da-footer _ngcontent-ng-c2999626113="" class="navigation-footer ng-tns-c2999626113-1" _nghost-ng-c2142878249=""><div _ngcontent-ng-c2142878249="" class="legal"><a _ngcontent-ng-c2142878249="" target="_blank" rel="noopener noreferrer" data-cy="impressum" class="link impressum" href="https://www.ottonova.de/impressum"> Impressum </a><a _ngcontent-ng-c2142878249="" target="_blank" rel="noopener noreferrer" data-cy="datenschutz" class="link" href="https://www.ottonova.de/datenschutz"> Datenschutz </a></div></da-footer></div></section></da-navigation></div></div><div _ngcontent-ng-c728632794="" class="content ng-tns-c728632794-0 ng-trigger ng-trigger-slider"><router-outlet _ngcontent-ng-c728632794="" id="router-outlet" class="ng-tns-c728632794-0 ng-star-inserted" style=""></router-outlet><!----><!----><main _ngcontent-ng-c728632794="" class="ng-tns-c728632794-0 ng-trigger ng-trigger-fadeIn ng-animating" hidden="" style="margin: 0px;"><div _ngcontent-ng-c728632794="" class="ng-tns-c728632794-0"></div><!----></main></div><da-footer _ngcontent-ng-c728632794="" class="footer ng-tns-c728632794-0" _nghost-ng-c2142878249=""><div _ngcontent-ng-c2142878249="" class="legal"><a _ngcontent-ng-c2142878249="" target="_blank" rel="noopener noreferrer" data-cy="impressum" class="link impressum" href="https://www.ottonova.de/impressum"> Impressum </a><a _ngcontent-ng-c2142878249="" target="_blank" rel="noopener noreferrer" data-cy="datenschutz" class="link" href="https://www.ottonova.de/datenschutz"> Datenschutz </a></div></da-footer><frontend-version _ngcontent-ng-c728632794="" class="ng-tns-c728632794-0" _nghost-ng-c1723054131=""><!----></frontend-version><frontend-alerts _ngcontent-ng-c728632794="" class="ng-tns-c728632794-0"><!----><!----><!----><!----></frontend-alerts><frontend-notifications _ngcontent-ng-c728632794="" positionclass="top" class="ng-tns-c728632794-0 ng-tns-c319082083-2" _nghost-ng-c319082083=""><div _ngcontent-ng-c319082083="" class="ng-tns-c319082083-2 notifications-queue top"><!----></div></frontend-notifications></da-root>
+  <script src="runtime.ccd52d32fa3703ba.js" type="module"></script><script src="polyfills.c3dd5d9eafeb3d7b.js" type="module"></script><script src="vendor.f6a0229771fc84ab.js" type="module"></script><script src="main.ceaf9469ef1b9267.js" type="module"></script>
+
+<canvas id="confetti" width="3200" height="2800" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; overflow: visible; z-index: 1; pointer-events: none;"></canvas></body>

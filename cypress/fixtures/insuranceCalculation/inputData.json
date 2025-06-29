@@ -1,10 +1,14 @@
 {
   "currentInsuranceType": "gesetzlich versichert",
+  "dailySicknessAllowance": "150",
   "employmentType": "Angestellt",
   "income": "100000",
   "insuranceType": "Vollversicherung",
   "ingressDate": "2: 2024-10-01",
   "isParent": true,
+  "monthlyPayment": "427,63",
+  "premiumReductionContribution": "250",
+  "tariffName": "First Class Pro+",
   "birthDates": {
     "invalidDate": {
       "day": "32",
