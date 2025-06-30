@@ -16,18 +16,18 @@ export function insureChild(isParent = false, childBirthDate = {}) {
 export function inputBirthDate(date) {
   cy.assertTextIsVisible('Wann bist du geboren?');
   inputDate(date);
-  cy.clickButton(SELECTORS.birthdayContinueButton);
+  cy.clickButton(SELECTORS.buttons.birthdayContinueButton);
 }
 
 export function inputInvalidBirthDate(date, errorMessage) {
   cy.assertTextIsVisible('Wann bist du geboren?');
   inputDate(date);
-  cy.assertTextIsVisible(SELECTORS.invalidAgeValidationMessage, errorMessage);
+  cy.assertTextIsVisible(errorMessage);
   cy.assertButtonIsDisabled(SELECTORS.buttons.birthdayContinueButton);
 }
 
 export function selectCurrentInsuranceType(typeSelector, currentInsuranceType) {
   cy.assertTextIsVisible('Wie bist du aktuell versichert?');
   cy.clickRadioButtonWithText(typeSelector, currentInsuranceType);
-  cy.clickButton(SELECTORS.buttons.insuranceContinueButton);
+  cy.clickButton(SELECTORS.buttons.insuranceStatusContinueButton);
 }

@@ -1,0 +1,118 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 0,
+    "pending": 0,
+    "failures": 1,
+    "start": "2025-06-30T21:15:26.168Z",
+    "end": "2025-06-30T21:16:10.204Z",
+    "duration": 44036,
+    "testsRegistered": 1,
+    "passPercent": 0,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "e027748f-0447-4759-a769-cbf47e1375d7",
+      "title": "",
+      "fullFile": "cypress/e2e/insuranceCalculation.cy.js",
+      "file": "cypress/e2e/insuranceCalculation.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "967d6343-3879-49b5-9c26-66445c84b33f",
+          "title": "Online Beitragsrechner",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Employed - Public insurance - 1 child",
+              "fullTitle": "Online Beitragsrechner Employed - Public insurance - 1 child",
+              "timedOut": null,
+              "duration": 43960,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('/online-beitragsrechner');\npage.acceptCookies();\ninsuranceChoice.selectOccupationalStatus(_selectors.default.employmentStatusOptionEmployed, this.inputData.employmentType);\ninsuranceChoice.inputIncome(this.inputData.income);\ninsuranceChoice.selectInsuranceProduct(_selectors.default.fullInsurance, this.inputData.insuranceProduct);\ninsuranceChoice.selectInsuranceStartDate(dateTime.getDateOfFirstDayOfTheMonthAfterNextMonth().date);\npersonalSituation.inputInvalidBirthDate(this.inputData.birthDates.invalidDate, this.birthDateErrors.invalidDate);\npersonalSituation.inputInvalidBirthDate(this.inputData.birthDates.futureDate, this.birthDateErrors.futureDate);\npersonalSituation.inputInvalidBirthDate(this.inputData.birthDates.olderThan101, this.birthDateErrors.olderThan101);\npersonalSituation.inputInvalidBirthDate(this.inputData.birthDates.youngerThan16, this.birthDateErrors.youngerThan16);\npersonalSituation.inputBirthDate(this.inputData.birthDates.validDate);\npersonalSituation.selectCurrentInsuranceType(_selectors.default.insuranceStatusStatutory, this.inputData.currentInsuranceType);\npersonalSituation.insureChild(this.inputData.isParent, this.inputData.birthDates.childDate);\ntariffOptions.selectRecommendedTariffOption();\ntariffOptions.selectTariff(this.inputData.tariffName);\ntariffOptions.setDailySicknessAllowance(this.inputData.dailySicknessAllowance);\ntariffOptions.assertMonthlyPayment(this.inputData.monthlyPayment);\ntariffOptions.continueWithSignup();\nsignup.seeComprehensiveSignupPage();",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 20000ms: Expected to find element: `[data-cy=\"[data-testid='uc-accept-all-button']\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 20000ms: Expected to find element: `[data-cy=\"[data-testid='uc-accept-all-button']\"]`, but never found it.\n    at Context.eval (webpack://self-healing-e2e-tests-prototype/./cypress/support/commands.js:24:12)\n    at wrapped (https://www.ottonova.de/__cypress/runner/cypress_runner.js:141516:43)",
+                "diff": null
+              },
+              "uuid": "79c05d22-0a9e-4e4a-84c1-a1fcf5ebb14b",
+              "parentUUID": "967d6343-3879-49b5-9c26-66445c84b33f",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "79c05d22-0a9e-4e4a-84c1-a1fcf5ebb14b"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 43960,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": true,
+        "reportFilename": "result-[name]",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "charts": true,
+        "embeddedScreenshots": true,
+        "inlineAssets": true,
+        "quiet": true,
+        "saveAllAttempts": false,
+        "saveHtml": false,
+        "saveJson": true,
+        "reportDir": "reports/mocha-reports/.jsons",
+        "reportFilename": "result-[name]",
+        "reportPageTitle": "Test Report",
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}

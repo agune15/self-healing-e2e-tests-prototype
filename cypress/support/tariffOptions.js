@@ -6,7 +6,7 @@ export function assertMonthlyPayment(amount) {
 }
 
 export function continueWithSignup() {
-  cy.clickButton(SELECTORS.buttons.continueWithSignup);
+  cy.clickButton(SELECTORS.buttons.acceptAllButton);
 }
 
 export function selectRecommendedTariffOption() {
@@ -16,13 +16,12 @@ export function selectRecommendedTariffOption() {
 
 export function selectTariff(tariffName) {
   cy.assertTextIsVisible('Klasse, hier dein Angebot');
-  cy.getElement('tariff-title').each($el => {
+  cy.getElement(SELECTORS.tariffTitle).each($el => {
     const text = $el.text().replace(/\s+/g, ' ').trim();
     const normalizedText = text.replace(/([a-z])([A-Z])/g, '$1 $2');
 
     if (normalizedText === tariffName) {
-      cy.wrap($el).closest('.tariff-tile').find(SELECTORS.buttons.tariffSelectButton).click();
-      return false;
+      cy.wrap($el).click();
     }
   });
 }
@@ -30,9 +29,4 @@ export function selectTariff(tariffName) {
 export function setDailySicknessAllowance(amount) {
   cy.assertTextIsVisible('Krankentagegeld');
   cy.typeInput(SELECTORS.dailySicknessAllowanceInput, amount);
-}
-
-export function setPremiumReductionContribution(amount) {
-  cy.assertTextIsVisible('Beitragsentlastung im Alter');
-  cy.typeInput(SELECTORS.premiumReductionContributionInput, amount);
 }

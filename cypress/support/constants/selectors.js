@@ -7,10 +7,10 @@ const SELECTORS = {
     employmentContinueButton: 'employment-status-continue',
     insuranceContinueButton: 'insurance-product-continue',
     insuranceStatusContinueButton: 'insurance-status-continue',
+    resultContinueWithSignup: 'result-continue-with-signup',
     tariffOptionsRecommendedContinue: 'tariff-options-recommended-continue',
     tariffSelectButton: '[data-cy="tariff-select-button"]',
   },
-  contributionReliefSelect: 'contribution-relief-select',
   dailySicknessAllowanceInput: 'dsa-requested-payout-select',
   dayInput: 'day',
   employmentStatusOptionEmployed: 'employment-status-option-employed',
@@ -24,6 +24,7 @@ const SELECTORS = {
   monthInput: 'month',
   negativeAgeValidationMessage: 'negative-age-validation-message',
   noChildrenButton: 'no-children-button',
+  tariffTitle: 'tariff-title',
   yearInput: 'year',
 };
 

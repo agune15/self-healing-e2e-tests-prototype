@@ -15,5 +15,8 @@
     "mocha": "^10.7.3",
     "mochawesome": "^7.1.3"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "cypress-mochawesome-reporter": "^3.8.2"
+  }
 }

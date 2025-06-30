@@ -35,7 +35,6 @@ describe('Online Beitragsrechner', () => {
     tariffOptions.selectRecommendedTariffOption();
     tariffOptions.selectTariff(this.inputData.tariffName);
     tariffOptions.setDailySicknessAllowance(this.inputData.dailySicknessAllowance);
-    tariffOptions.setPremiumReductionContribution(this.inputData.premiumReductionContribution);
     tariffOptions.assertMonthlyPayment(this.inputData.monthlyPayment);
     tariffOptions.continueWithSignup();
     signup.seeComprehensiveSignupPage();

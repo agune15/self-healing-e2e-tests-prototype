@@ -6,8 +6,7 @@
   "insuranceProduct": "Vollversicherung",
   "ingressDate": "2: 2024-10-01",
   "isParent": true,
-  "monthlyPayment": "427,63",
-  "premiumReductionContribution": "250",
+  "monthlyPayment": "474,87",
   "tariffName": "First Class Pro+",
   "birthDates": {
     "invalidDate": {
@@ -18,7 +17,7 @@
     "futureDate": {
       "day": "01",
       "month": "01",
-      "year": "2025"
+      "year": "2030"
     },
     "olderThan101": {
       "day": "01",

@@ -1,5 +1,5 @@
 Cypress.Commands.add('assertButtonIsDisabled', selector => {
-  cy.get(selector).should('be.disabled');
+  cy.getElement(selector).should('be.disabled');
 });
 
 Cypress.Commands.add('assertTextIsVisible', text => {
