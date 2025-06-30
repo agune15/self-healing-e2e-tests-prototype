@@ -2,8 +2,8 @@ Cypress.Commands.add('assertButtonIsDisabled', selector => {
   cy.get(selector).should('be.disabled');
 });
 
-Cypress.Commands.add('assertTextIsVisible', (selector, text) => {
-  cy.get(selector).should('contain', text).should('be.visible');
+Cypress.Commands.add('assertTextIsVisible', text => {
+  cy.contains(text).should('be.visible');
 });
 
 Cypress.Commands.add('clickButton', (selector, options, index) => {
@@ -12,7 +12,6 @@ Cypress.Commands.add('clickButton', (selector, options, index) => {
   });
 });
 
-// not used
 Cypress.Commands.add('clickOptionWithText', (selector, text) => {
   cy.getElement(selector).contains(text).click();
 });

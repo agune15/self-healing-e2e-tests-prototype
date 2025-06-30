@@ -4,6 +4,7 @@ import * as insuranceChoice from '../support/insuranceChoice';
 import * as personalSituation from '../support/personalSituation';
 import * as tariffOptions from '../support/tariffOptions';
 import * as signup from '../support/signup';
+import * as dateTime from '../support/dateTime';
 
 describe('Online Beitragsrechner', () => {
   before(() => {
@@ -16,8 +17,8 @@ describe('Online Beitragsrechner', () => {
     page.acceptCookies();
     insuranceChoice.selectOccupationalStatus(SELECTORS.employmentStatusOptionEmployed, this.inputData.employmentType);
     insuranceChoice.inputIncome(this.inputData.income);
-    insuranceChoice.selectInsuranceType(SELECTORS.fullInsurance, this.inputData.insuranceType);
-    insuranceChoice.selectInsuranceStartDate(this.inputData.ingressDate);
+    insuranceChoice.selectInsuranceProduct(SELECTORS.fullInsurance, this.inputData.insuranceProduct);
+    insuranceChoice.selectInsuranceStartDate(dateTime.getDateOfFirstDayOfTheMonthAfterNextMonth().date);
     personalSituation.inputInvalidBirthDate(this.inputData.birthDates.invalidDate, this.birthDateErrors.invalidDate);
     personalSituation.inputInvalidBirthDate(this.inputData.birthDates.futureDate, this.birthDateErrors.futureDate);
     personalSituation.inputInvalidBirthDate(this.inputData.birthDates.olderThan101, this.birthDateErrors.olderThan101);

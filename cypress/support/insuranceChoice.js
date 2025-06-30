@@ -12,9 +12,9 @@ export function selectInsuranceStartDate(ingressDate) {
   cy.clickButton(SELECTORS.buttons.insuranceContinueButton);
 }
 
-export function selectInsuranceType(typeSelector, insuranceType, ingressDate) {
+export function selectInsuranceProduct(productSelector, insuranceProduct) {
   cy.assertTextIsVisible('Für welche Krankenversicherung interessierst du dich?');
-  cy.clickRadioButtonWithText(typeSelector, insuranceType);
+  cy.clickOptionWithText(productSelector, insuranceProduct);
 }
 
 export function selectOccupationalStatus(statusSelector, employmentType) {

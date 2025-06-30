@@ -3,7 +3,7 @@
   "dailySicknessAllowance": "150",
   "employmentType": "Angestellt",
   "income": "100000",
-  "insuranceType": "Vollversicherung",
+  "insuranceProduct": "Vollversicherung",
   "ingressDate": "2: 2024-10-01",
   "isParent": true,
   "monthlyPayment": "427,63",
