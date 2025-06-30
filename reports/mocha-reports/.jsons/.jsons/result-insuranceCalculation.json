@@ -5,9 +5,9 @@
     "passes": 0,
     "pending": 0,
     "failures": 1,
-    "start": "2025-06-30T21:55:27.468Z",
-    "end": "2025-06-30T21:56:11.661Z",
-    "duration": 44193,
+    "start": "2025-06-30T22:13:46.044Z",
+    "end": "2025-06-30T22:14:31.058Z",
+    "duration": 45014,
     "testsRegistered": 1,
     "passPercent": 0,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "0706a28d-8890-4101-b1d8-4bfb8ee348be",
+      "uuid": "9e548f96-f106-4301-9671-ffe4d454749c",
       "title": "",
       "fullFile": "cypress/e2e/insuranceCalculation.cy.js",
       "file": "cypress/e2e/insuranceCalculation.cy.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "97ac720f-643d-40b7-99f7-0d73cf05d486",
+          "uuid": "d6600544-81e6-4af0-9e01-93e24aae716e",
           "title": "Online Beitragsrechner",
           "fullFile": "",
           "file": "",
@@ -38,7 +38,7 @@
               "title": "Employed - Public insurance - 1 child",
               "fullTitle": "Online Beitragsrechner Employed - Public insurance - 1 child",
               "timedOut": null,
-              "duration": 44125,
+              "duration": 44918,
               "state": "failed",
               "speed": null,
               "pass": false,
@@ -51,8 +51,8 @@
                 "estack": "AssertionError: Timed out retrying after 20000ms: Expected to find element: `[data-cy=\"[data-testid='uc-accept-all-button']\"]`, but never found it.\n    at Context.eval (webpack://self-healing-e2e-tests-prototype/./cypress/support/commands.js:24:12)\n    at wrapped (https://www.ottonova.de/__cypress/runner/cypress_runner.js:141516:43)",
                 "diff": null
               },
-              "uuid": "64457cea-8b0b-4c3c-b42b-a4469d10f0bb",
-              "parentUUID": "97ac720f-643d-40b7-99f7-0d73cf05d486",
+              "uuid": "171055d5-dd37-4c02-b092-823da0088c8a",
+              "parentUUID": "d6600544-81e6-4af0-9e01-93e24aae716e",
               "isHook": false,
               "skipped": false
             }
@@ -60,11 +60,11 @@
           "suites": [],
           "passes": [],
           "failures": [
-            "64457cea-8b0b-4c3c-b42b-a4469d10f0bb"
+            "171055d5-dd37-4c02-b092-823da0088c8a"
           ],
           "pending": [],
           "skipped": [],
-          "duration": 44125,
+          "duration": 44918,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
@@ -105,7 +105,7 @@
         "saveAllAttempts": false,
         "saveHtml": false,
         "saveJson": true,
-        "reportDir": "reports/mocha-reports/.jsons",
+        "reportDir": "reports/mocha-reports/.jsons/.jsons",
         "reportFilename": "result-[name]",
         "reportPageTitle": "Test Report",
         "overwrite": false,

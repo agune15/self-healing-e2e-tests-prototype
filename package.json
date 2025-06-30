@@ -8,8 +8,10 @@
     "cy:run": "cypress run --browser chrome --spec 'cypress/e2e/*'",
     "reports:combine": "mochawesome-merge reports/mocha-reports/*.json > reports/mocha-reports/combined-report.json",
     "reports:generate": "marge reports/mocha-reports/combined-report.json --reportDir=reports --reportFilename=report --inline",
-    "reports:cleanup": "rm -rf reports/mocha-reports/*.json",
-    "reports": "npm run reports:combine && npm run reports:generate && npm run reports:cleanup"
+    "reports:clean": "rm -rf reports/mocha-reports && rm -rf reports/screenshots && rm -rf reports/snapshots",
+    "reports": "npm run reports:combine && npm run reports:generate && npm run reports:clean",
+    "llm:analyze-failures": "node scripts/aiTestFailureAnalyzer/analyzeTestFailures.js",
+    "llm:create-mr": "node scripts/aiTestFailureAnalyzer/createMergeRequestWithFixes.js"
   },
   "keywords": [],
   "author": "Alex Nebot Oller",
@@ -21,6 +23,9 @@
   },
   "type": "module",
   "dependencies": {
-    "cypress-mochawesome-reporter": "^3.8.2"
+    "@google/generative-ai": "^0.24.1",
+    "cheerio": "^1.1.0",
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "dotenv": "^17.0.0"
   }
 }

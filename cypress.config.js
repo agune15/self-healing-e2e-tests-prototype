@@ -26,7 +26,7 @@ export default defineConfig({
       saveAllAttempts: false,
       saveHtml: false,
       saveJson: true,
-      reportDir: './reports/mocha-reports',
+      reportDir: './reports/mocha-reports/.jsons',
       reportFilename: 'result-[name]',
       reportPageTitle: 'Test Report',
     },

@@ -1,10 +1,9 @@
 /**
- * Script to analyze test failures and suggest or apply fixes using Bedrock.
+ * Script to analyze test failures and suggest or apply fixes using Gemini.
  * Usage: node scripts/aiTestFailureAnalyzer/analyzeTestFailures.js
  *
  * Requirements:
- * - AWS_BEDROCK_MODEL_ID must be set in the environment.
- * - AWS credentials/profile must be configured for Bedrock access.
+ * - GEMINI_API_KEY must be set in the environment.
  *
  * This script is intended to be run after test execution, before any auto-fix or MR creation step.
  */
@@ -14,31 +13,32 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import parseTestFileWithDependencies from './helpers/testLogicParser.js';
 import { parseValidationMessages } from './helpers/htmlSnapshotParser.js';
 import { patchFunctionInFile } from './helpers/patchFileWithFix.js';
+import dotenv from 'dotenv';
 
 // CONFIGURATION:
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const MOCHA_REPORTS_DIR = path.join(__dirname, '../../reports/mocha-reports');
+const MOCHA_REPORTS_DIR = path.join(__dirname, '../../reports/mocha-reports/.jsons');
 const SNAPSHOT_DIR = path.join(__dirname, '../../reports/snapshots');
-const client = new BedrockRuntimeClient({ profile: 'bedrock-test', region: 'eu-central-1' });
-const modelId = process.env.AWS_BEDROCK_MODEL_ID || 'eu.anthropic.claude-3-5-sonnet-20240620-v1:0';
-
-function isAmazonModel(modelName) {
-  return modelName.toLowerCase().includes('amazon');
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || dotenv.config().parsed.GEMINI_API_KEY;
+if (!GEMINI_API_KEY) {
+  throw new Error('GEMINI_API_KEY environment variable must be set.');
 }
-
-function isAnthropicModel(modelName) {
-  return modelName.toLowerCase().includes('anthropic');
-}
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-latest';
+const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
 
 function getReportFiles() {
   return fs
     .readdirSync(MOCHA_REPORTS_DIR)
-    .filter(f => f.endsWith('.json'))
+    .filter(f => {
+      const fullPath = path.join(MOCHA_REPORTS_DIR, f);
+      return f.endsWith('.json') && fs.statSync(fullPath).isFile();
+    })
     .map(f => path.join(MOCHA_REPORTS_DIR, f));
 }
 
@@ -59,15 +59,6 @@ function testLogicString(parsed) {
     }
   }
   return logicStr;
-}
-
-async function parseLlmResponse(response, selector) {
-  let responseBody = response.body;
-  if (responseBody && typeof responseBody.transformToString === 'function') {
-    responseBody = await responseBody.transformToString();
-  }
-  responseBody = JSON.parse(responseBody);
-  return selector(responseBody);
 }
 
 function buildPrompt(testTitle, error, testFile, testFileAndDependenciesLogic, htmlValidationMessages, html) {
@@ -182,11 +173,12 @@ function collectFailuresFromReports(reportFiles) {
         for (const test of suite.tests || []) {
           if (test.state === 'failed') {
             const snapshotFile = path.join(SNAPSHOT_DIR, getSnapshotFileName(test.fullTitle));
-            const parsed = parseTestFileWithDependencies(suite.fullFile);
+            const testFile = result.fullFile || suite.fullFile;
+            const parsed = parseTestFileWithDependencies(testFile);
             failures.push({
               title: test.fullTitle,
               error: test.err && test.err.estack,
-              testFile: suite.file,
+              testFile: testFile,
               snapshotFile: snapshotFile,
               testFileAndDependenciesLogic: testLogicString(parsed),
               htmlValidationMessages: JSON.stringify(parseValidationMessages(snapshotFile)),
@@ -200,48 +192,11 @@ function collectFailuresFromReports(reportFiles) {
 }
 
 async function invokeLLM(prompt) {
-  if (isAnthropicModel(modelId)) {
-    const invokeParams = {
-      modelId: modelId,
-      body: JSON.stringify({
-        anthropic_version: 'bedrock-2023-05-31',
-        max_tokens: 4096,
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'text',
-                text: prompt,
-              },
-            ],
-          },
-        ],
-      }),
-    };
-    const response = await client.send(new InvokeModelCommand(invokeParams));
-    return parseLlmResponse(response, body => body.content[0].text);
-  }
-  if (isAmazonModel(modelId)) {
-    const invokeParams = {
-      modelId: modelId,
-      body: JSON.stringify({
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
-      }),
-    };
-    const response = await client.send(new InvokeModelCommand(invokeParams));
-    return parseLlmResponse(response, body => body.output?.message?.content?.[0]?.text || '');
-  }
-  throw new Error(`Unknown model provider for modelId: ${modelId}`);
+  // Gemini expects a single text prompt
+  const result = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: prompt }] }] });
+  // Gemini returns a candidates array; take the first candidate's content
+  const text = result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || result?.response?.text || '';
+  return text;
 }
 
 async function handleFailure(fail, seenReasons) {
