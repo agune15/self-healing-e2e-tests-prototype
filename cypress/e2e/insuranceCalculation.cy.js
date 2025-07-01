@@ -1,4 +1,5 @@
 import SELECTORS from '../support/constants/selectors';
+import { INSURANCE_INPUT_DATA, BIRTH_DATE_ERRORS } from '../support/constants/insuranceCalculation';
 import * as page from '../support/page';
 import * as insuranceChoice from '../support/insuranceChoice';
 import * as personalSituation from '../support/personalSituation';
@@ -7,35 +8,36 @@ import * as signup from '../support/signup';
 import * as dateTime from '../support/dateTime';
 
 describe('Online Beitragsrechner', () => {
-  before(() => {
-    cy.fixture('insuranceCalculation/inputData.json').as('inputData');
-    cy.fixture('insuranceCalculation/birthDateErrors.json').as('birthDateErrors');
-  });
-
-  it('Employed - Public insurance - 1 child', function () {
+  it('Employed - Public insurance - 1 child', () => {
     cy.visit('/online-beitragsrechner');
     page.acceptCookies();
-    insuranceChoice.selectOccupationalStatus(SELECTORS.employmentStatusOptionEmployed, this.inputData.employmentType);
-    insuranceChoice.inputIncome(this.inputData.income);
-    insuranceChoice.selectInsuranceProduct(SELECTORS.fullInsurance, this.inputData.insuranceProduct);
-    insuranceChoice.selectInsuranceStartDate(dateTime.getDateOfFirstDayOfTheMonthAfterNextMonth().date);
-    personalSituation.inputInvalidBirthDate(this.inputData.birthDates.invalidDate, this.birthDateErrors.invalidDate);
-    personalSituation.inputInvalidBirthDate(this.inputData.birthDates.futureDate, this.birthDateErrors.futureDate);
-    personalSituation.inputInvalidBirthDate(this.inputData.birthDates.olderThan101, this.birthDateErrors.olderThan101);
-    personalSituation.inputInvalidBirthDate(
-      this.inputData.birthDates.youngerThan16,
-      this.birthDateErrors.youngerThan16
+    insuranceChoice.selectOccupationalStatus(
+      SELECTORS.employmentStatusOptionEmployed,
+      INSURANCE_INPUT_DATA.employmentType
     );
-    personalSituation.inputBirthDate(this.inputData.birthDates.validDate);
+    insuranceChoice.inputIncome(INSURANCE_INPUT_DATA.income);
+    insuranceChoice.selectInsuranceProduct(SELECTORS.fullInsurance, INSURANCE_INPUT_DATA.insuranceProduct);
+    insuranceChoice.selectInsuranceStartDate(dateTime.getDateOfFirstDayOfTheMonthAfterNextMonth().date);
+    personalSituation.inputInvalidBirthDate(INSURANCE_INPUT_DATA.birthDates.invalidDate, BIRTH_DATE_ERRORS.invalidDate);
+    personalSituation.inputInvalidBirthDate(INSURANCE_INPUT_DATA.birthDates.futureDate, BIRTH_DATE_ERRORS.futureDate);
+    personalSituation.inputInvalidBirthDate(
+      INSURANCE_INPUT_DATA.birthDates.olderThan101,
+      BIRTH_DATE_ERRORS.olderThan101
+    );
+    personalSituation.inputInvalidBirthDate(
+      INSURANCE_INPUT_DATA.birthDates.youngerThan16,
+      BIRTH_DATE_ERRORS.youngerThan16
+    );
+    personalSituation.inputBirthDate(INSURANCE_INPUT_DATA.birthDates.validDate);
     personalSituation.selectCurrentInsuranceType(
       SELECTORS.insuranceStatusStatutory,
-      this.inputData.currentInsuranceType
+      INSURANCE_INPUT_DATA.currentInsuranceType
     );
-    personalSituation.insureChild(this.inputData.isParent, this.inputData.birthDates.childDate);
+    personalSituation.insureChild(INSURANCE_INPUT_DATA.isParent, INSURANCE_INPUT_DATA.birthDates.childDate);
     tariffOptions.selectRecommendedTariffOption();
-    tariffOptions.selectTariff(this.inputData.tariffName);
-    tariffOptions.setDailySicknessAllowance(this.inputData.dailySicknessAllowance);
-    tariffOptions.assertMonthlyPayment(this.inputData.monthlyPayment);
+    tariffOptions.selectTariff(INSURANCE_INPUT_DATA.tariffName);
+    tariffOptions.setDailySicknessAllowance(INSURANCE_INPUT_DATA.dailySicknessAllowance);
+    tariffOptions.assertMonthlyPayment(INSURANCE_INPUT_DATA.monthlyPayment);
     tariffOptions.continueWithSignup();
     signup.seeComprehensiveSignupPage();
   });

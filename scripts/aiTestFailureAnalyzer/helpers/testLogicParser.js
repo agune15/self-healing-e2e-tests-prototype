@@ -18,7 +18,7 @@ function extractImports(fileContent) {
   }
 
   // find VAR imports
-  importRegex = /import\s+(\w+)\s+from\s+['\"](.+?)['\"]/g;
+  importRegex = /import\s+({\s+[\w\s,]+\s+}|[\w\s]+)\s+from\s+['"](.+?)['"]/g;
   while ((match = importRegex.exec(fileContent))) {
     if (match[2].startsWith('.') || match[2].startsWith('/')) {
       imports.push({ ns: match[1], relPath: match[2], isDefault: true });
@@ -103,13 +103,14 @@ export default function parseTestFileWithDependencies(testFilePath) {
           relPath.endsWith('.js') || relPath.endsWith('.ts') ? relPath : relPath + '.js'
         );
         if (!fs.existsSync(depPath)) continue;
+        if (visited.has(depPath)) continue; // Prevent duplicate extraction
         const depContent = fs.readFileSync(depPath, 'utf8');
-        // Add the entire file as a dependency
         dependencies.push({
           path: depPath,
           usedFns: ['ALL_CONSTANTS'],
           code: [depContent],
         });
+        visited.add(depPath); // Mark as visited
         continue; // Skip normal logic for this dependency
       }
       const depPath = path.resolve(
