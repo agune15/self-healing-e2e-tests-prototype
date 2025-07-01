@@ -29,25 +29,22 @@ function findUsedFunctions(fileContent, ns) {
 }
 
 function extractFunctionCode(depContent, fnName) {
-  // Match exported function declarations (with types/generics)
-  const fnRegex = new RegExp(
-    `(?:export\\s+)?function\\s+${fnName}\\s*(<[^>]+>\\s*)?\\([^)]*\\)\\s*(:\\s*[^\\s{]+)?\\s*{[\\s\\S]*?^\\s*}`,
-    'm'
-  );
+  // Match exported function declarations (ignore types/generics)
+  const fnRegex = new RegExp(`(?:export\\s+)?function\\s+${fnName}\\s*\\([^)]*\\)\\s*{[\\s\\S]*?^\\s*}`, 'm');
   let fnMatch = depContent.match(fnRegex);
   if (fnMatch) return fnMatch[0];
 
-  // Match exported arrow functions (with types)
+  // Match exported arrow functions (ignore types)
   const arrowRegex = new RegExp(
-    `(?:export\\s+)?(?:const|let|var)\\s+${fnName}\\s*=\\s*(?:async\\s*)?\\([^)]*\\)\\s*(:\\s*[^=]+)?\\s*=>\\s*{[\\s\\S]*?^\\s*}`,
+    `(?:export\\s+)?(?:const|let|var)\\s+${fnName}\\s*=\\s*(?:async\\s*)?\\([^)]*\\)\\s*=>\\s*{[\\s\\S]*?^\\s*}`,
     'm'
   );
   fnMatch = depContent.match(arrowRegex);
   if (fnMatch) return fnMatch[0];
 
-  // Match exported function expressions (with types)
+  // Match exported function expressions (ignore types)
   const exprRegex = new RegExp(
-    `(?:export\\s+)?(?:const|let|var)\\s+${fnName}\\s*=\\s*function\\s*(<[^>]+>\\s*)?\\([^)]*\\)\\s*(:\\s*[^\\s{]+)?\\s*{[\\s\\S]*?^\\s*}`,
+    `(?:export\\s+)?(?:const|let|var)\\s+${fnName}\\s*=\\s*function\\s*\\([^)]*\\)\\s*{[\\s\\S]*?^\\s*}`,
     'm'
   );
   fnMatch = depContent.match(exprRegex);
@@ -58,7 +55,7 @@ function extractFunctionCode(depContent, fnName) {
   if (exportListRegex.test(depContent)) {
     // Try to find function declaration or const above
     const fnDeclRegex = new RegExp(
-      `function\\s+${fnName}\\s*(<[^>]+>\\s*)?\\([^)]*\\)\\s*(:\\s*[^\\s{]+)?\\s*{[\\s\\S]*?^\\s*}|(?:const|let|var)\\s+${fnName}\\s*=\\s*(?:async\\s*)?\\([^)]*\\)\\s*(:\\s*[^=]+)?\\s*=>\\s*{[\\s\\S]*?^\\s*}`,
+      `function\\s+${fnName}\\s*\\([^)]*\\)\\s*{[\\s\\S]*?^\\s*}|(?:const|let|var)\\s+${fnName}\\s*=\\s*(?:async\\s*)?\\([^)]*\\)\\s*=>\\s*{[\\s\\S]*?^\\s*}`,
       'm'
     );
     fnMatch = depContent.match(fnDeclRegex);
@@ -78,7 +75,7 @@ export default function parseTestFileWithDependencies(testFilePath) {
     for (const { ns, relPath } of imports) {
       const depPath = path.resolve(
         path.dirname(fileAbsPath),
-        relPath.endsWith('.ts') || relPath.endsWith('.js') ? relPath : relPath + '.ts'
+        relPath.endsWith('.js') || relPath.endsWith('.ts') ? relPath : relPath + '.js' // Prefer .js, fallback to .ts
       );
       if (!fs.existsSync(depPath)) continue;
       const depContent = fs.readFileSync(depPath, 'utf8');
@@ -121,43 +118,8 @@ export default function parseTestFileWithDependencies(testFilePath) {
   // Start recursive extraction from test file
   extractRecursively(testFileAbs, testContent);
 
-  // Include Prospect class data fields if imported
-  const prospectImportRegex = /import\s+Prospect\s+from\s+['"](.+prospect)['"]/;
-  const match = testContent.match(prospectImportRegex);
-  if (match) {
-    let prospectPath = match[1];
-    // Resolve relative to test file
-    const resolvedProspectPath = path.resolve(
-      path.dirname(testFileAbs),
-      prospectPath.endsWith('.ts') ? prospectPath : prospectPath + '.ts'
-    );
-    if (fs.existsSync(resolvedProspectPath)) {
-      if (!dependencies.some(dep => dep.path === resolvedProspectPath)) {
-        const prospectContent = fs.readFileSync(resolvedProspectPath, 'utf8');
-        const classMatch = prospectContent.match(/export\s+default\s+class\s+Prospect\s*{([\s\S]*?)^\s*}/m);
-        let fieldsStr = '';
-        if (classMatch) {
-          const body = classMatch[1];
-          const fieldRegex = /^\s*([a-zA-Z0-9_]+):\s*([^;]+);/gm;
-          let fieldMatch;
-          fieldsStr = 'Prospect class data fields:\n';
-          while ((fieldMatch = fieldRegex.exec(body))) {
-            fieldsStr += `  ${fieldMatch[1]}: ${fieldMatch[2]}\n`;
-          }
-        } else {
-          fieldsStr = '[Could not extract Prospect class fields]';
-        }
-        dependencies.push({
-          path: resolvedProspectPath,
-          usedFns: ['DATA'],
-          code: [fieldsStr],
-        });
-      }
-    }
-  }
-
   // Add Cypress custom command signatures
-  const commandsPath = path.resolve(__dirname, '../../../cypress/support/commands.ts');
+  const commandsPath = path.resolve(__dirname, '../../cypress/support/commands.js');
   if (fs.existsSync(commandsPath)) {
     const commandsContent = fs.readFileSync(commandsPath, 'utf8');
     // Regex to match Cypress.Commands.add('name', (args...) => ... )
