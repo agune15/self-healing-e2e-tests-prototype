@@ -17,7 +17,7 @@
   "author": "Alex Nebot Oller",
   "license": "MIT",
   "devDependencies": {
-    "cypress": "^14.4",
+    "cypress": "~14.3.2",
     "cypress-mochawesome-reporter": "^3.8.2"
   },
   "type": "module",
