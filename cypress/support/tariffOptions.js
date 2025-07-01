@@ -6,7 +6,7 @@ export function assertMonthlyPayment(amount) {
 }
 
 export function continueWithSignup() {
-  cy.clickButton(SELECTORS.buttons.acceptAllButton);
+  cy.clickButton(SELECTORS.buttons.birthdayContinueButton);
 }
 
 export function selectRecommendedTariffOption() {

@@ -18,9 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "cypress": "^14.4",
-    "cypress-mochawesome-reporter": "^3.8.2",
-    "mocha": "^10.7.3",
-    "mochawesome": "^7.1.3"
+    "cypress-mochawesome-reporter": "^3.8.2"
   },
   "type": "module",
   "dependencies": {
