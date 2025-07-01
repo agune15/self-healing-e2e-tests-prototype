@@ -18,14 +18,14 @@
   "license": "MIT",
   "devDependencies": {
     "cypress": "^14.4",
+    "cypress-mochawesome-reporter": "^3.8.2",
     "mocha": "^10.7.3",
     "mochawesome": "^7.1.3"
   },
   "type": "module",
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
+    "@google/genai": "^1.7.0",
     "cheerio": "^1.1.0",
-    "cypress-mochawesome-reporter": "^3.8.2",
     "dotenv": "^17.0.0"
   }
 }

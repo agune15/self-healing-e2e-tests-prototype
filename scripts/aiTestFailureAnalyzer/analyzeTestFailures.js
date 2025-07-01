@@ -13,7 +13,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import parseTestFileWithDependencies from './helpers/testLogicParser.js';
 import { parseValidationMessages } from './helpers/htmlSnapshotParser.js';
 import { patchFunctionInFile } from './helpers/patchFileWithFix.js';
@@ -28,9 +28,8 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY || dotenv.config().parsed.GEMI
 if (!GEMINI_API_KEY) {
   throw new Error('GEMINI_API_KEY environment variable must be set.');
 }
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash-latest';
-const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+const genAI = new GoogleGenAI(GEMINI_API_KEY);
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 function getReportFiles() {
   return fs
@@ -191,12 +190,13 @@ function collectFailuresFromReports(reportFiles) {
   return failures;
 }
 
-async function invokeLLM(prompt) {
-  // Gemini expects a single text prompt
-  const result = await model.generateContent({ contents: [{ role: 'user', parts: [{ text: prompt }] }] });
-  // Gemini returns a candidates array; take the first candidate's content
-  const text = result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || result?.response?.text || '';
-  return text;
+async function invokeLLM(genAI, prompt) {
+  const response = await genAI.models.generateContent({
+    model: GEMINI_MODEL,
+    contents: prompt,
+    config: { responseMimeType: 'application/json' },
+  });
+  return response.text;
 }
 
 async function handleFailure(fail, seenReasons) {
@@ -222,9 +222,8 @@ async function handleFailure(fail, seenReasons) {
   );
   console.log(`\nPrompt for test: ${fail.title}\n---\n${prompt}\n---\n`);
 
-  // Send prompt to Bedrock
   try {
-    const text = await invokeLLM(prompt);
+    const text = await invokeLLM(genAI, prompt);
     console.log(`LLM response for test: ${fail.title}\n---\n${text}\n---\n`);
     const fixes = JSON.parse(text);
     for (const fixObj of fixes) {
