@@ -48,7 +48,19 @@ function getSnapshotFileName(testName) {
 function testLogicString(parsed) {
   let logicStr = `// Test File: ${parsed.testFile.path}\n${parsed.testFile.content}\n`;
   for (const dep of parsed.dependencies) {
-    if (dep.usedFns.length === 1 && dep.usedFns[0] === 'ALL') {
+    // Print imported/exported constants with their keys and values
+    if (
+      dep.constant &&
+      dep.code.length > 0 &&
+      typeof dep.code[0] === 'object' &&
+      dep.code[0].path &&
+      dep.code[0].hasOwnProperty('value')
+    ) {
+      logicStr += `\n// Imported Constant: ${dep.constant} from ${dep.path}\n`;
+      for (const entry of dep.code) {
+        logicStr += `${entry.path} = ${JSON.stringify(entry.value)}\n`;
+      }
+    } else if (dep.usedFns && dep.usedFns.length === 1 && dep.usedFns[0] === 'ALL') {
       logicStr += `\n// Dependency (full file): ${dep.path}\n${dep.code[0]}\n`;
     } else {
       logicStr += `\n// Dependency: ${dep.path}\n`;

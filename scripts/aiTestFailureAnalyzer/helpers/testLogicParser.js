@@ -5,14 +5,23 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-function extractNamespaceImports(fileContent) {
-  const importRegex = /import \* as (\w+) from ['"](.+?)['"]/g;
+function extractImports(fileContent) {
+  // find * imports
+  let importRegex = /import \* as (\w+) from ['"](.+?)['"]/g;
   const imports = [];
   let match;
   while ((match = importRegex.exec(fileContent))) {
     // Only include relative (internal) imports
     if (match[2].startsWith('.') || match[2].startsWith('/')) {
       imports.push({ ns: match[1], relPath: match[2] });
+    }
+  }
+
+  // find VAR imports
+  importRegex = /import\s+(\w+)\s+from\s+['\"](.+?)['\"]/g;
+  while ((match = importRegex.exec(fileContent))) {
+    if (match[2].startsWith('.') || match[2].startsWith('/')) {
+      imports.push({ ns: match[1], relPath: match[2], isDefault: true });
     }
   }
   return imports;
@@ -64,6 +73,20 @@ function extractFunctionCode(depContent, fnName) {
   return null;
 }
 
+function extractConstantKeyValues(depPath, constName) {
+  // Read the file content
+  if (!fs.existsSync(depPath)) return [];
+  const content = fs.readFileSync(depPath, 'utf8');
+  // Regex to match: const constName = { ... };
+  const regex = new RegExp(`const\\s+${constName}\\s*=\\s*({[\\s\\S]*?})\\s*;`, 'm');
+  const match = content.match(regex);
+  if (match) {
+    // Return the object literal as a string
+    return [match[1]];
+  }
+  return [];
+}
+
 export default function parseTestFileWithDependencies(testFilePath) {
   const testFileAbs = path.resolve(testFilePath);
   const testContent = fs.readFileSync(testFileAbs, 'utf8');
@@ -71,14 +94,46 @@ export default function parseTestFileWithDependencies(testFilePath) {
   const visited = new Set();
 
   function extractRecursively(fileAbsPath, fileContent, parentNs = null, parentFns = null) {
-    const imports = extractNamespaceImports(fileContent);
+    const imports = extractImports(fileContent);
     for (const { ns, relPath } of imports) {
+      // Special handling for support/constants dependencies
+      if (relPath.includes('/support/constants')) {
+        const depPath = path.resolve(
+          path.dirname(fileAbsPath),
+          relPath.endsWith('.js') || relPath.endsWith('.ts') ? relPath : relPath + '.js'
+        );
+        if (!fs.existsSync(depPath)) continue;
+        const depContent = fs.readFileSync(depPath, 'utf8');
+        // Add the entire file as a dependency
+        dependencies.push({
+          path: depPath,
+          usedFns: ['ALL_CONSTANTS'],
+          code: [depContent],
+        });
+        continue; // Skip normal logic for this dependency
+      }
       const depPath = path.resolve(
         path.dirname(fileAbsPath),
         relPath.endsWith('.js') || relPath.endsWith('.ts') ? relPath : relPath + '.js' // Prefer .js, fallback to .ts
       );
       if (!fs.existsSync(depPath)) continue;
       const depContent = fs.readFileSync(depPath, 'utf8');
+      // Always extract exported constants from the imported file
+      const constRegex = /const\s+(\w+)\s*=\s*{([\s\S]*?)};?/g;
+      let match;
+      while ((match = constRegex.exec(depContent))) {
+        const constName = match[1];
+        const keyValues = extractConstantKeyValues(depPath, constName);
+        const depKey = depPath + '::' + constName;
+        if (keyValues.length > 0 && !visited.has(depKey)) {
+          dependencies.push({
+            path: depPath,
+            constant: constName,
+            code: keyValues,
+          });
+          visited.add(depKey);
+        }
+      }
       // Determine which functions to extract
       let usedFns;
       if (parentNs && parentFns) {
@@ -119,16 +174,25 @@ export default function parseTestFileWithDependencies(testFilePath) {
   extractRecursively(testFileAbs, testContent);
 
   // Add Cypress custom command signatures
-  const commandsPath = path.resolve(__dirname, '../../cypress/support/commands.js');
+  const commandsPath = path.resolve(__dirname, '../../../cypress/support/commands.js');
   if (fs.existsSync(commandsPath)) {
     const commandsContent = fs.readFileSync(commandsPath, 'utf8');
-    // Regex to match Cypress.Commands.add('name', (args...) => ... )
-    const cmdRegex = /Cypress\.Commands\.add\((['"])(\w+)\1,\s*\(([^)]*)\)\s*=>/g;
+    // Regex to match all forms of Cypress.Commands.add
+    const cmdRegex =
+      /Cypress\.Commands\.add\((['"])(\w+)\1,\s*(?:\(([^)]*)\)|([a-zA-Z0-9_]+))\s*=>|Cypress\.Commands\.add\((['"])(\w+)\5,\s*function\s*\(([^)]*)\)/g;
     let match;
     const signatures = [];
     while ((match = cmdRegex.exec(commandsContent))) {
-      const name = match[2];
-      const args = match[3].replace(/\s+/g, ' ').trim();
+      const name = match[2] || match[6];
+      // Prefer (args) group, then single arg, then function args
+      const args =
+        typeof match[3] === 'string' && match[3] !== undefined
+          ? match[3].replace(/\s+/g, ' ').trim()
+          : typeof match[4] === 'string' && match[4] !== undefined
+          ? match[4].trim()
+          : typeof match[7] === 'string' && match[7] !== undefined
+          ? match[7].replace(/\s+/g, ' ').trim()
+          : '';
       signatures.push(`Cypress.Commands.add('${name}', (${args}) => ...)`);
     }
     const commandsStr = 'Cypress custom command signatures:\n' + signatures.map(sig => '  ' + sig).join('\n');
