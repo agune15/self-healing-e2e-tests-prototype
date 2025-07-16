@@ -11,7 +11,7 @@
     "reports:clean": "rm -rf reports/mocha-reports && rm -rf reports/screenshots && rm -rf reports/snapshots",
     "reports": "npm run reports:combine && npm run reports:generate && npm run reports:clean",
     "llm:analyze-failures": "node scripts/aiTestFailureAnalyzer/analyzeTestFailures.js",
-    "llm:create-mr": "node scripts/aiTestFailureAnalyzer/createMergeRequestWithFixes.js"
+    "llm:create-pr": "node scripts/aiTestFailureAnalyzer/createPullRequestWithFixes.js"
   },
   "keywords": [],
   "author": "Alex Nebot Oller",

@@ -2,13 +2,13 @@ import SELECTORS from './constants/selectors';
 
 export function inputIncome(income) {
   cy.assertTextIsVisible('Wie hoch ist dein Bruttojahresgehalt?');
-  cy.typeInput(SELECTORS.incomeInput, income);
+  cy.typeInput(SELECTORS.inputs.incomeInput, income);
   cy.clickButton(SELECTORS.buttons.employmentContinueButton);
 }
 
 export function selectInsuranceStartDate(ingressDate) {
   cy.assertTextIsVisible('Wann soll deine Versicherung starten?');
-  cy.selectDropdownOption(SELECTORS.ingressDateSelect, ingressDate);
+  cy.selectDropdownOption(SELECTORS.selectors.ingressDateSelect, ingressDate);
   cy.clickButton(SELECTORS.buttons.insuranceContinueButton);
 }
 

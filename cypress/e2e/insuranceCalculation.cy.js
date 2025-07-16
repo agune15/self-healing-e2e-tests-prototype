@@ -12,11 +12,11 @@ describe('Online Beitragsrechner', () => {
     cy.visit('/online-beitragsrechner');
     page.acceptCookies();
     insuranceChoice.selectOccupationalStatus(
-      SELECTORS.employmentStatusOptionEmployed,
+      SELECTORS.selectors.employmentStatusOptionEmployed,
       INSURANCE_INPUT_DATA.employmentType
     );
     insuranceChoice.inputIncome(INSURANCE_INPUT_DATA.income);
-    insuranceChoice.selectInsuranceProduct(SELECTORS.fullInsurance, INSURANCE_INPUT_DATA.insuranceProduct);
+    insuranceChoice.selectInsuranceProduct('full-insurance', INSURANCE_INPUT_DATA.insuranceProduct);
     insuranceChoice.selectInsuranceStartDate(dateTime.getDateOfFirstDayOfTheMonthAfterNextMonth().date);
     personalSituation.inputInvalidBirthDate(INSURANCE_INPUT_DATA.birthDates.invalidDate, BIRTH_DATE_ERRORS.invalidDate);
     personalSituation.inputInvalidBirthDate(INSURANCE_INPUT_DATA.birthDates.futureDate, BIRTH_DATE_ERRORS.futureDate);
@@ -30,7 +30,7 @@ describe('Online Beitragsrechner', () => {
     );
     personalSituation.inputBirthDate(INSURANCE_INPUT_DATA.birthDates.validDate);
     personalSituation.selectCurrentInsuranceType(
-      SELECTORS.insuranceStatusStatutory,
+      SELECTORS.selectors.insuranceStatusStatutory,
       INSURANCE_INPUT_DATA.currentInsuranceType
     );
     personalSituation.insureChild(INSURANCE_INPUT_DATA.isParent, INSURANCE_INPUT_DATA.birthDates.childDate);

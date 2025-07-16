@@ -1,7 +1,7 @@
 import SELECTORS from './constants/selectors';
 
 export function inputDate(date) {
-  cy.typeInput(SELECTORS.dayInput, date.day);
-  cy.typeInput(SELECTORS.monthInput, date.month);
-  cy.typeInput(SELECTORS.yearInput, date.year);
+  cy.typeInput(SELECTORS.inputs.dayInput, date.day);
+  cy.typeInput(SELECTORS.inputs.monthInput, date.month);
+  cy.typeInput(SELECTORS.inputs.yearInput, date.year);
 }

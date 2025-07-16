@@ -203,8 +203,6 @@ function collectFailuresFromReports(reportFiles) {
 }
 
 async function invokeLLM(genAI, prompt) {
-  fs.writeFileSync(`prompt.txt`, prompt);
-
   const response = await genAI.models.generateContent({
     model: GEMINI_MODEL,
     contents: prompt,

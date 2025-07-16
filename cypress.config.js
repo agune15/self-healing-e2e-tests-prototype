@@ -25,10 +25,14 @@ export default defineConfig({
       quiet: true,
       saveAllAttempts: false,
       saveHtml: false,
-      saveJson: true,
+      saveJson: false,
       reportDir: './reports/mocha-reports',
       reportFilename: 'result-[name]',
       reportPageTitle: 'Test Report',
+      overwrite: true,
+      timestamp: false,
+      jsonDir: './reports/mocha-reports',
+      jsonFilename: 'result-[name].json',
     },
 
     setupNodeEvents(on) {

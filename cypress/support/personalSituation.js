@@ -4,11 +4,11 @@ import { inputDate } from './helpers';
 export function insureChild(isParent = false, childBirthDate = {}) {
   cy.assertTextIsVisible('Hast du Kinder, die du mitversichern willst?');
   if (isParent) {
-    cy.clickRadioButtonWithText(SELECTORS.insureChildrenButton, 'ein Kind mit versichern');
+    cy.clickRadioButtonWithText(SELECTORS.buttons.insureChildrenButton, 'ein Kind mit versichern');
     inputDate(childBirthDate);
     cy.clickButton(SELECTORS.buttons.childrenWithKidsContinueButton);
   } else {
-    cy.clickRadioButtonWithText(SELECTORS.noChildrenButton, 'kein Kind versichern');
+    cy.clickRadioButtonWithText(SELECTORS.selectors.insureChildrenButton, 'kein Kind versichern');
     cy.clickButton(SELECTORS.buttons.childrenNoKidsContinue);
   }
 }
