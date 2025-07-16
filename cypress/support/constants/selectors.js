@@ -15,6 +15,7 @@ const SELECTORS = {
   },
   selectors: {
     employmentStatusOptionEmployed: 'employment-status-option-employed',
+    fullInsurance: 'full-insurance',
     ingressDateSelect: 'ingress-date',
     insuranceStatusStatutory: 'insurance-status-statutory',
   },

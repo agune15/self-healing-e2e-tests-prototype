@@ -25,8 +25,3 @@ export function selectTariff(tariffName) {
     }
   });
 }
-
-export function setDailySicknessAllowance(amount) {
-  cy.assertTextIsVisible('Krankentagegeld');
-  cy.typeInput(SELECTORS.dailySicknessAllowanceInput, amount);
-}
