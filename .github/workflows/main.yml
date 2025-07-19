@@ -1,0 +1,93 @@
+name: Self-Healing E2E Tests
+
+on:
+  push:
+    branches: ['master']
+  pull_request:
+    branches: ['master']
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    outputs:
+      test-result: ${{ steps.cypress-run.outcome }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build --if-present
+      - name: Run Cypress tests
+        id: cypress-run
+        run: npm run cy:run
+        continue-on-error: true
+      - name: Ensure reports directory exists
+        run: mkdir -p ./reports
+        if: always()
+      - name: Upload reports artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reports
+          path: ./reports
+          if-no-files-found: warn
+
+  generate_report:
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+      - run: npm ci
+      - name: Download test reports
+        uses: actions/download-artifact@v4
+        with:
+          name: reports
+          path: ./reports
+        continue-on-error: true
+      - name: Ensure reports directory exists
+        run: mkdir -p ./reports
+      - run: npm run reports
+
+  self_healing:
+    needs: [test, generate_report]
+    runs-on: ubuntu-latest
+    if: needs.test.outputs.test-result == 'failure'
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+      - run: npm ci
+      - name: Download test reports
+        uses: actions/download-artifact@v4
+        with:
+          name: reports
+          path: ./reports
+        continue-on-error: true
+      - name: Ensure reports directory exists
+        run: mkdir -p ./reports
+      - name: Analyze test failures with AI
+        run: npm run llm:analyze-failures
+      - name: Create PR with fixes
+        run: npm run llm:create-pr

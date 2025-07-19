@@ -1,0 +1,29 @@
+{
+  "name": "self-healing-e2e-tests-prototype",
+  "version": "1.0.0",
+  "description": "TBD",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "cypress open --e2e",
+    "cy:run": "cypress run --browser chrome --spec 'cypress/e2e/*'",
+    "reports:combine": "mkdir -p reports/mocha-reports && (ls reports/mocha-reports/*.json >/dev/null 2>&1 && mochawesome-merge reports/mocha-reports/*.json > reports/mocha-reports/combined-report.json || echo '{\"stats\":{\"suites\":0,\"tests\":0,\"passes\":0,\"pending\":0,\"failures\":0,\"start\":\"2024-01-01T00:00:00.000Z\",\"end\":\"2024-01-01T00:00:00.000Z\",\"duration\":0,\"testsRegistered\":0,\"passPercent\":0,\"pendingPercent\":0,\"other\":0,\"hasOther\":false,\"skipped\":0,\"hasSkipped\":false},\"results\":[{\"uuid\":\"00000000-0000-0000-0000-000000000000\",\"title\":\"\",\"fullFile\":\"\",\"file\":\"\",\"beforeHooks\":[],\"afterHooks\":[],\"tests\":[],\"suites\":[],\"passes\":[],\"failures\":[],\"pending\":[],\"skipped\":[],\"duration\":0,\"root\":false,\"rootEmpty\":true,\"_timeout\":0}]}' > reports/mocha-reports/combined-report.json)",
+    "reports:generate": "marge reports/mocha-reports/combined-report.json --reportDir=reports --reportFilename=report --inline --saveJson",
+    "reports:clean": "rm -rf reports/mocha-reports",
+    "reports": "npm run reports:combine && npm run reports:generate",
+    "llm:analyze-failures": "node scripts/aiTestFailureAnalyzer/analyzeTestFailures.js",
+    "llm:create-pr": "node scripts/aiTestFailureAnalyzer/createPullRequestWithFixes.js"
+  },
+  "keywords": [],
+  "author": "Alex Nebot Oller",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "~14.3.2",
+    "cypress-mochawesome-reporter": "^3.8.2"
+  },
+  "type": "module",
+  "dependencies": {
+    "@google/genai": "^1.7.0",
+    "cheerio": "^1.1.0",
+    "dotenv": "^17.0.0"
+  }
+}
