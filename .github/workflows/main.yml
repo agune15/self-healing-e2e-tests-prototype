@@ -61,8 +61,6 @@ jobs:
           name: reports
           path: ./reports
         continue-on-error: true
-      - name: Ensure reports directory exists
-        run: mkdir -p ./reports
       - name: Analyze test failures with AI
         run: npm run llm:analyze-failures
       - name: Create PR with fixes
