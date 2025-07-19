@@ -148,6 +148,10 @@ async function main() {
     throw new Error('GITHUB_TOKEN and GITHUB_REPO must be set in the environment.');
   }
   try {
+    // Configure git identity for the commit
+    execSync('git config user.name "Self-Healing Bot"');
+    execSync('git config user.email "noreply@github.com"');
+    
     // Switch to new branch and commit changes
     execSync(`git checkout -b ${PR_BRANCH_TITLE}`);
     execSync('git add .');
