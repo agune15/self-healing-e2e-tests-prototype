@@ -14,12 +14,16 @@ permissions:
   pull-requests: write
 
 jobs:
-  test:
+  test_and_heal:
     runs-on: ubuntu-latest
-    outputs:
-      test-result: ${{ steps.cypress-run.outcome }}
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPO: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
@@ -37,31 +41,9 @@ jobs:
           name: reports
           path: ./reports
           if-no-files-found: warn
-
-  self_healing:
-    needs: test
-    runs-on: ubuntu-latest
-    if: needs.test.outputs.test-result == 'failure'
-    env:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_REPO: ${{ github.repository }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-          cache: 'npm'
-      - run: npm ci
-      - name: Download test reports
-        uses: actions/download-artifact@v4
-        with:
-          name: reports
-          path: ./reports
-        continue-on-error: true
       - name: Analyze test failures with AI
+        if: steps.cypress-run.outcome == 'failure'
         run: npm run llm:analyze-failures
       - name: Create PR with fixes
+        if: steps.cypress-run.outcome == 'failure'
         run: npm run llm:create-pr
