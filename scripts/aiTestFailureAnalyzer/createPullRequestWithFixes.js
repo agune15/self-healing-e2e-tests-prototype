@@ -18,14 +18,17 @@ import { Buffer } from 'buffer';
 import https from 'https';
 
 const API_BASE_URL = 'https://api.github.com';
-const PR_BRANCH_TITLE = `auto/llm-fix-${getDateOfToday()}`;
+const PR_BRANCH_TITLE = `auto/llm-fix-${getTimestamp()}`;
 
-function getDateOfToday() {
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const dd = String(today.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+function getTimestamp() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const hh = String(now.getHours()).padStart(2, '0');
+  const min = String(now.getMinutes()).padStart(2, '0');
+  const ss = String(now.getSeconds()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}-${hh}${min}${ss}`;
 }
 
 function hasUncommittedChanges() {
