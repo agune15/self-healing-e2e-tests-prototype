@@ -41,29 +41,8 @@ jobs:
           path: ./reports
           if-no-files-found: warn
 
-  generate_report:
-    needs: test
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22.x
-          cache: 'npm'
-      - run: npm ci
-      - name: Download test reports
-        uses: actions/download-artifact@v4
-        with:
-          name: reports
-          path: ./reports
-        continue-on-error: true
-      - name: Ensure reports directory exists
-        run: mkdir -p ./reports
-      - run: npm run reports
-
   self_healing:
-    needs: [test, generate_report]
+    needs: test
     runs-on: ubuntu-latest
     if: needs.test.outputs.test-result == 'failure'
     env:
