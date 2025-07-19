@@ -54,8 +54,16 @@ export function patchFunctionInFile({ file, function: functionName, before, afte
   );
   const match = content.match(fnRegex);
   if (!match) {
-    console.error(`Function '${fnName}' not found in file. No changes made.`);
-    return false;
+    // Fallback: try simple string replacement if no function found
+    if (content.includes(before)) {
+      const newContent = content.replace(before, after);
+      fs.writeFileSync(file, newContent, 'utf8');
+      console.log(`Patched (simple replacement) in ${file}:\n---\n${before}\n>>>\n${after}`);
+      return true;
+    } else {
+      console.error(`Function '${fnName}' not found and 'before' string not found in file. No changes made.`);
+      return false;
+    }
   }
   const fnBlock = match[0];
   if (!fnBlock.includes(before)) {
