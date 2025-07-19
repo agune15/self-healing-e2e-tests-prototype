@@ -43,6 +43,7 @@ async function getRefSha(ref, token, repo) {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
+      'User-Agent': 'self-healing-e2e-tests-bot/1.0.0',
     },
   };
   return new Promise((resolve, reject) => {
@@ -75,6 +76,7 @@ async function createBranch({ branch, ref = 'master', token, repo }) {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
       'Content-Length': Buffer.byteLength(data),
+      'User-Agent': 'self-healing-e2e-tests-bot/1.0.0',
     },
   };
   return new Promise((resolve, reject) => {
@@ -110,6 +112,7 @@ async function createPullRequest({ branch, title, target = 'master', token, repo
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
       'Content-Length': Buffer.byteLength(data),
+      'User-Agent': 'self-healing-e2e-tests-bot/1.0.0',
     },
   };
   return new Promise((resolve, reject) => {
