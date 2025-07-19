@@ -148,11 +148,14 @@ async function main() {
     throw new Error('GITHUB_TOKEN and GITHUB_REPO must be set in the environment.');
   }
   try {
-    await createBranch({
-      branch: PR_BRANCH_TITLE,
-      token,
-      repo,
-    });
+    // Switch to new branch and commit changes
+    execSync(`git checkout -b ${PR_BRANCH_TITLE}`);
+    execSync('git add .');
+    execSync(`git commit -m "🤖 Self-healing: Fix test failures detected by LLM analysis
+
+Automated fixes applied by the self-healing E2E test system."`);
+    execSync(`git push origin ${PR_BRANCH_TITLE}`);
+    
     const pr = await createPullRequest({
       branch: PR_BRANCH_TITLE,
       title: `Draft: ${PR_BRANCH_TITLE}`,
