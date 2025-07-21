@@ -17,7 +17,7 @@ const SELECTORS = {
     employmentStatusOptionEmployed: 'employment-status-option-employed',
     fullInsurance: 'full-insurance',
     ingressDateSelect: 'ingress-date',
-    insuranceStatusStatutory: 'insurance-status-full',
+    insuranceStatusStatutory: 'insurance-status-statutory',
   },
   inputs: {
     dailySicknessAllowanceInput: 'dsa-requested-payout-select',
