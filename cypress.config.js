@@ -6,7 +6,7 @@ export default defineConfig({
   env: {},
 
   e2e: {
-    baseUrl: 'https://www.ottonova.de',
+    baseUrl: 'https://practice.expandtesting.com',
     chromeWebSecurity: false,
     experimentalInteractiveRunEvents: true,
     defaultCommandTimeout: 20000,
