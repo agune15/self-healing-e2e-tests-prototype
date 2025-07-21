@@ -150,13 +150,13 @@ Example positive response JSON:
     "explanation": "The HTML snapshot shows that the element \`input[data-cy="day"]\` is present, but the test is looking for \`input[data-cy="Tag"]\`. It also shows that the element \`input[data-cy="month"]\` is present, but the test is looking for \`input[data-cy="Monat"]\`. This indicates a discrepancies in the expected elements attributes. ",
     "fixes": [
       {
-        "file": "/Users/alex.oller/repos/piedpipertests/cypress/support/authApp.ts",
+        "file": "/Users/alex.oller/repos/e2eRepo/cypress/support/authApp.ts",
         "function": "inputDateOfBirth(dateOfBirth: { day: string; month: string; year: string }): void",
         "before": "cy.typeInput('Tag', dateOfBirth.day);",
         "after": "cy.typeInput('day', dateOfBirth.day);"
       },
       {
-        "file": "/Users/alex.oller/repos/piedpipertests/cypress/support/authApp.ts",
+        "file": "/Users/alex.oller/repos/e2eRepo/cypress/support/authApp.ts",
         "function": "inputDateOfBirth(dateOfBirth: { day: string; month: string; year: string }): void",
         "before": "cy.typeInput('Monat', dateOfBirth.month);",
         "after": "cy.typeInput('month', dateOfBirth.month);"
