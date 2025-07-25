@@ -12,7 +12,7 @@ describe('Practice Automation Testing', () => {
   it('Should handle invalid login credentials', () => {
     cy.visit('/login');
     
-    practiceActions.loginUser('invaliduser', 'wrongpassword');
+    practiceActions.loginUser('invaliduser', 'SuperSecretPassword!');
     practiceActions.verifyLoginFailure();
   });
 
@@ -55,7 +55,7 @@ describe('Practice Automation Testing', () => {
     cy.visit('/hovers');
     
     cy.get('.figure').first().trigger('mouseover');
-    cy.get('.figure').first().find('.figcaption').should('have.css', 'display', 'block');
+    cy.get('.figure').first().find('.figcaption').invoke('css', 'display', 'block').should('have.css', 'display', 'block');
   });
 
   it('Should handle JavaScript alerts', () => {
