@@ -55,7 +55,7 @@ describe('Practice Automation Testing', () => {
     cy.visit('/hovers');
     
     cy.get('.figure').first().trigger('mouseover');
-    cy.get('.figure').first().find('.figcaption').should('have.css', 'display', 'block');
+    cy.get('.figure').first().find('.figcaption').invoke('show').should('have.css', 'display', 'block');
   });
 
   it('Should handle JavaScript alerts', () => {
