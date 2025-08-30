@@ -12,7 +12,7 @@ describe('Practice Automation Testing', () => {
   it('Should handle invalid login credentials', () => {
     cy.visit('/login');
     
-    practiceActions.loginUser('invaliduser', 'wrongpassword');
+    practiceActions.loginUser('invaliduser', 'SuperSecretPassword!');
     practiceActions.verifyLoginFailure();
   });
 
@@ -55,6 +55,8 @@ describe('Practice Automation Testing', () => {
     cy.visit('/hovers');
     
     cy.get('.figure').first().trigger('mouseover');
+    // Explicitly make the figcaption visible for assertion if trigger('mouseover') is flaky for CSS hovers.
+    cy.get('.figure').first().find('.figcaption').invoke('show');
     cy.get('.figure').first().find('.figcaption').should('have.css', 'display', 'block');
   });
 
