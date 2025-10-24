@@ -12,7 +12,7 @@ describe('Practice Automation Testing', () => {
   it('Should handle invalid login credentials', () => {
     cy.visit('/login');
     
-    practiceActions.loginUser('invaliduser', 'wrongpassword');
+    practiceActions.loginUser('wrongUser', 'SuperSecretPassword!');
     practiceActions.verifyLoginFailure();
   });
 
