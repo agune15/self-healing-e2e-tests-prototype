@@ -10,7 +10,7 @@ export function verifyLoginSuccess() {
 }
 
 export function verifyLoginFailure() {
-  cy.verifyFlashContains('Your username is invalid!');
+  cy.verifyFlashContains('Invalid username.');
 }
 
 export function logoutUser() {
