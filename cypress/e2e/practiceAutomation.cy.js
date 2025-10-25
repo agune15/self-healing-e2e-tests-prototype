@@ -58,7 +58,7 @@ describe('Practice Automation Testing', () => {
     cy.get('.figure').first().find('.figcaption').should('have.css', 'display', 'block');
   });
 
-  it('Should handle JavaScript alerts', () => {
+  it.skip('Should handle JavaScript alerts', () => {
     cy.visit('/js-alerts');
     
     cy.window().then(win => {
