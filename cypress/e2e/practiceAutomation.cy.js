@@ -59,7 +59,7 @@ describe('Practice Automation Testing', () => {
   });
 
   it('Should handle JavaScript alerts', () => {
-    cy.visit('/js-alerts');
+    cy.visit('/javascript-alerts');
     
     cy.window().then(win => {
       cy.stub(win, 'alert').as('alert');
