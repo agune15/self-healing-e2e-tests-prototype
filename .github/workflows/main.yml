@@ -1,12 +1,9 @@
 name: Self-Healing E2E Tests
 
+# Automatic triggers disabled: this prototype is no longer maintained and the
+# daily run kept opening draft PRs and consuming Actions minutes.
+# Run manually from the Actions tab if needed.
 on:
-  push:
-    branches: ['master']
-  pull_request:
-    branches: ['master']
-  schedule:
-    - cron: '0 8 * * *'
   workflow_dispatch:
 
 permissions:
